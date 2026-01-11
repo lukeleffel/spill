@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="manifest" href="manifest.json">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spill Coffee Everywhere — Columbus</title>
@@ -88,17 +87,6 @@
             gap: 16px;
         }
         
-        .logo-icon {
-            width: 52px;
-            height: 52px;
-            animation: float 3s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(-25deg); }
-            50% { transform: translateY(-8px) rotate(-25deg); }
-        }
-        
         .logo-text h1 {
             font-family: 'Bebas Neue', sans-serif;
             font-size: 38px;
@@ -139,6 +127,21 @@
             display: flex;
             flex-direction: column;
             align-items: flex-end;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 8px 12px;
+            border: 2px solid transparent;
+        }
+        
+        .stat-item:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border: 2px solid var(--dark);
+            transform: translateY(-2px);
+        }
+        
+        .stat-item.active {
+            background: rgba(255, 107, 157, 0.2);
+            border: 2px solid var(--retro-pink);
         }
         
         .header-meta .count {
@@ -201,6 +204,12 @@
             position: relative;
         }
         
+        #map {
+            flex: 1;
+            position: relative;
+        }
+        
+        /* Sidebar only appears in articles view now */
         .sidebar {
             width: 400px;
             background: rgba(255, 248, 231, 0.95);
@@ -487,11 +496,35 @@
             position: relative;
         }
         
+        #articlesView {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+        
         #articlesContent {
             flex: 1;
             background: rgba(255, 248, 231, 0.95);
             overflow-y: auto;
             padding: 40px;
+            backdrop-filter: blur(10px);
+        }
+        
+        #listView {
+            flex: 1;
+            background: rgba(255, 248, 231, 0.95);
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #listContent {
+            flex: 1;
+        }
+        
+        #listView .sidebar-header {
+            background: rgba(255, 248, 231, 0.98);
             backdrop-filter: blur(10px);
         }
         
@@ -653,6 +686,7 @@
             border: 3px solid var(--dark);
             width: 40px;
             height: 40px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -675,7 +709,7 @@
         
         .custom-marker:hover,
         .custom-marker.highlight {
-            transform: scale(1.3) rotate(5deg);
+            transform: scale(1.3);
             box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.4);
             opacity: 1;
             z-index: 1000 !important;
@@ -778,28 +812,6 @@
         <header>
             <div class="header-content">
                 <div class="logo">
-                    <svg class="logo-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <linearGradient id="cupGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#FF6B9D;stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#4A90E2;stop-opacity:1" />
-                            </linearGradient>
-                        </defs>
-                        <g transform="rotate(-25 50 50)">
-                            <path d="M 30 40 L 35 70 L 65 70 L 70 40 Z" fill="url(#cupGradient)" stroke="#2C2C2C" stroke-width="2.5"/>
-                            <path d="M 70 45 Q 80 45 80 55 Q 80 65 70 65" fill="none" stroke="#2C2C2C" stroke-width="2.5"/>
-                            <ellipse cx="50" cy="40" rx="20" ry="5" fill="#FFB347"/>
-                        </g>
-                        <g>
-                            <circle cx="72" cy="32" r="3.5" fill="#6B4423" opacity="0.9"/>
-                            <circle cx="77" cy="35" r="3" fill="#8B5A3C" opacity="0.8"/>
-                            <circle cx="73" cy="40" r="2.5" fill="#6B4423" opacity="0.7"/>
-                            <circle cx="80" cy="41" r="2.5" fill="#8B5A3C" opacity="0.8"/>
-                            <circle cx="76" cy="46" r="2" fill="#6B4423" opacity="0.6"/>
-                            <circle cx="83" cy="47" r="2.2" fill="#8B5A3C" opacity="0.7"/>
-                            <ellipse cx="79" cy="28" rx="4" ry="2" fill="#6B4423" opacity="0.5"/>
-                        </g>
-                    </svg>
                     <div class="logo-text">
                         <h1>Spill Coffee Everywhere</h1>
                         <p>Care As Culture — Independent Cafe Map</p>
@@ -807,16 +819,17 @@
                 </div>
                 <div class="header-meta">
                     <div class="stats-row">
-                        <div class="stat-item">
+                        <div class="stat-item" data-filter="partner">
                             <span class="count network" id="networkCount">—</span>
                             <div>PARTNER CAFES</div>
                         </div>
-                        <div class="stat-item">
+                        <div class="stat-item active" data-filter="all">
                             <span class="count" id="shopCount">—</span>
                             <div>TOTAL INDEPENDENT SHOPS</div>
                         </div>
                     </div>
                     <div class="view-toggle">
+                        <button class="view-btn" data-view="list">LIST</button>
                         <button class="view-btn active" data-view="map">MAP</button>
                         <button class="view-btn" data-view="articles">ARTICLES</button>
                     </div>
@@ -825,23 +838,31 @@
         </header>
         
         <div class="main-content">
-            <aside class="sidebar">
-                <div class="sidebar-header">
-                    <input type="text" class="search-box" id="searchBox" placeholder="SEARCH...">
-                </div>
-                <div id="shopList"></div>
-                <div id="articleList" class="hidden"></div>
-            </aside>
-            
             <div id="map"></div>
             
-            <div id="articlesContent" class="hidden">
-                <div class="articles-header">
-                    <h2>Spill Magazine</h2>
-                    <p>Care As Culture — A coffee magazine about giving a sh*t</p>
+            <div id="listView" class="hidden">
+                <div class="sidebar-header" style="position: sticky; top: 0; z-index: 10;">
+                    <input type="text" class="search-box" id="listSearchBox" placeholder="SEARCH CAFES...">
                 </div>
-                <div class="articles-grid" id="articlesGrid">
-                    <div class="loading-message">Loading articles from Substack...</div>
+                <div id="listContent"></div>
+            </div>
+            
+            <div id="articlesView" class="hidden">
+                <aside class="sidebar">
+                    <div class="sidebar-header">
+                        <input type="text" class="search-box" id="articleSearchBox" placeholder="SEARCH ARTICLES...">
+                    </div>
+                    <div id="articleList"></div>
+                </aside>
+                
+                <div id="articlesContent">
+                    <div class="articles-header">
+                        <h2>Spill Magazine</h2>
+                        <p>Care As Culture — A coffee magazine about giving a sh*t</p>
+                    </div>
+                    <div class="articles-grid" id="articlesGrid">
+                        <div class="loading-message">Loading articles from Substack...</div>
+                    </div>
                 </div>
             </div>
             
@@ -917,6 +938,7 @@
 
         let articles = [];
         let currentView = 'map';
+        let filterMode = 'all'; // 'all' or 'partner'
 
         function getInitials(name) {
             const words = name.replace(/—/g, ' ').split(' ');
@@ -931,9 +953,44 @@
 
         document.getElementById('shopCount').textContent = coffeeShops.length;
         
-        // Calculate "On The Map" count (cafes with websites = part of network)
-        const networkCount = coffeeShops.filter(shop => shop.website).length;
+        // Calculate "Partner Cafes" count (cafes with gradient markers = H/N/B/M/T)
+        const networkCount = coffeeShops.filter(shop => usesGradientMarker(shop.name)).length;
         document.getElementById('networkCount').textContent = networkCount;
+
+        function filterCafes(mode) {
+            filterMode = mode;
+            
+            // Update stat item active states
+            document.querySelectorAll('.stat-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.filter === mode) {
+                    item.classList.add('active');
+                }
+            });
+            
+            // Filter markers on map
+            markers.forEach(({ marker, shop }) => {
+                const hasGradient = usesGradientMarker(shop.name);
+                
+                if (mode === 'partner') {
+                    if (hasGradient) {
+                        marker.addTo(map);
+                    } else {
+                        map.removeLayer(marker);
+                    }
+                } else {
+                    marker.addTo(map);
+                }
+            });
+        }
+        
+        // Stat item click handlers
+        document.querySelectorAll('.stat-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const filter = item.dataset.filter;
+                filterCafes(filter);
+            });
+        });
 
         // Initialize map
         const map = L.map('map', {
@@ -1017,88 +1074,9 @@
             });
             
             markers.push({ marker, shop, index });
-
-            const sidebarBadgeId = `sidebar-badge-${index}`;
-            const sidebarInstagramId = `sidebar-instagram-${index}`;
-            
-            const typeLink = linkUrl ? 
-                `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer" class="shop-type" id="${sidebarBadgeId}">${shop.type}</a>` : 
-                `<span class="shop-type no-link">${shop.type}</span>`;
-            
-            const sidebarInstagramIcon = `
-                <a href="https://instagram.com/${shop.instagram}" target="_blank" rel="noopener noreferrer" class="instagram-link" id="${sidebarInstagramId}">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                    </svg>
-                </a>
-            `;
-            
-            const card = document.createElement('div');
-            card.className = 'shop-card';
-            card.dataset.index = index;
-            card.innerHTML = `
-                <div class="shop-number">№ ${String(index + 1).padStart(2, '0')}</div>
-                <div class="shop-name">${shop.name}</div>
-                <div class="shop-address">${shop.address}</div>
-                <div class="shop-meta">
-                    ${typeLink}
-                    ${sidebarInstagramIcon}
-                </div>
-            `;
-            
-            card.addEventListener('mouseenter', () => {
-                const markerElement = marker.getElement();
-                if (markerElement) {
-                    const markerDiv = markerElement.querySelector('.custom-marker');
-                    if (markerDiv) {
-                        markerDiv.classList.add('highlight');
-                    }
-                }
-            });
-            
-            card.addEventListener('mouseleave', () => {
-                const markerElement = marker.getElement();
-                if (markerElement) {
-                    const markerDiv = markerElement.querySelector('.custom-marker');
-                    if (markerDiv) {
-                        markerDiv.classList.remove('highlight');
-                    }
-                }
-            });
-            
-            card.addEventListener('click', (e) => {
-                // Check if click is on a link or inside a link
-                const clickedLink = e.target.closest('a');
-                
-                if (clickedLink) {
-                    // Ensure external links open in new tab
-                    if (clickedLink.href && !clickedLink.href.startsWith(window.location.origin)) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        window.open(clickedLink.href, '_blank', 'noopener,noreferrer');
-                    }
-                    return;
-                }
-                
-                // Only trigger card action if NOT clicking a link
-                document.querySelectorAll('.shop-card').forEach(c => c.classList.remove('active'));
-                card.classList.add('active');
-                map.setView([shop.lat, shop.lng], 15);
-                marker.openPopup();
-                card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            });
-            
-            shopList.appendChild(card);
         });
 
-        markers.forEach(({ marker, index }) => {
-            marker.on('click', () => {
-                const cards = document.querySelectorAll('.shop-card');
-                cards.forEach(c => c.classList.remove('active'));
-                cards[index].classList.add('active');
-                cards[index].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            });
-        });
+        // Marker click handler removed since no sidebar
 
         // Fetch RSS feed and parse articles
         async function fetchArticles() {
@@ -1213,24 +1191,26 @@
                 btn.classList.add('active');
                 
                 const mapEl = document.getElementById('map');
-                const articlesEl = document.getElementById('articlesContent');
-                const shopListEl = document.getElementById('shopList');
-                const articleListEl = document.getElementById('articleList');
-                const searchBox = document.getElementById('searchBox');
+                const articlesViewEl = document.getElementById('articlesView');
+                const listViewEl = document.getElementById('listView');
+                const listSearchBox = document.getElementById('listSearchBox');
+                const articleSearchBox = document.getElementById('articleSearchBox');
+                
+                // Hide everything first
+                mapEl.classList.add('hidden');
+                articlesViewEl.classList.add('hidden');
+                listViewEl.classList.add('hidden');
                 
                 if (view === 'map') {
                     mapEl.classList.remove('hidden');
-                    articlesEl.classList.add('hidden');
-                    shopListEl.classList.remove('hidden');
-                    articleListEl.classList.add('hidden');
-                    searchBox.placeholder = 'SEARCH CAFES...';
                     setTimeout(() => map.invalidateSize(), 100);
-                } else {
-                    mapEl.classList.add('hidden');
-                    articlesEl.classList.remove('hidden');
-                    shopListEl.classList.add('hidden');
-                    articleListEl.classList.remove('hidden');
-                    searchBox.placeholder = 'SEARCH ARTICLES...';
+                } else if (view === 'list') {
+                    listViewEl.classList.remove('hidden');
+                    listSearchBox.placeholder = 'SEARCH CAFES...';
+                    renderListView();
+                } else if (view === 'articles') {
+                    articlesViewEl.classList.remove('hidden');
+                    articleSearchBox.placeholder = 'SEARCH ARTICLES...';
                     
                     if (articles.length === 0) {
                         fetchArticles();
@@ -1238,32 +1218,90 @@
                 }
             });
         });
-
-        // Search functionality
-        const searchBox = document.getElementById('searchBox');
-        searchBox.addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase();
+        
+        // Render list view
+        function renderListView(searchQuery = '') {
+            const listContent = document.getElementById('listContent');
             
-            if (currentView === 'map') {
-                const cards = document.querySelectorAll('.shop-card');
-                cards.forEach((card, index) => {
-                    const shop = coffeeShops[index];
+            const filteredShops = coffeeShops.filter(shop => {
+                // Apply filter mode - check for gradient marker
+                if (filterMode === 'partner' && !usesGradientMarker(shop.name)) {
+                    return false;
+                }
+                
+                // Apply search
+                if (searchQuery) {
                     const searchText = `${shop.name} ${shop.address} ${shop.type}`.toLowerCase();
-                    
-                    if (searchText.includes(query)) {
-                        card.style.display = 'block';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-            } else {
-                renderArticles(query);
+                    return searchText.includes(searchQuery.toLowerCase());
+                }
+                
+                return true;
+            });
+            
+            if (filteredShops.length === 0) {
+                listContent.innerHTML = '<div class="loading-message">No cafes found matching your criteria.</div>';
+                return;
             }
+            
+            listContent.innerHTML = filteredShops.map((shop, index) => {
+                const actualIndex = coffeeShops.indexOf(shop);
+                const linkUrl = shop.website;
+                const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(shop.address)}`;
+                const appleMapsUrl = `https://maps.apple.com/?daddr=${encodeURIComponent(shop.address)}`;
+                
+                const typeLink = linkUrl ? 
+                    `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer" class="shop-type">${shop.type}</a>` : 
+                    `<span class="shop-type no-link">${shop.type}</span>`;
+                
+                const instagramIcon = `
+                    <a href="https://instagram.com/${shop.instagram}" target="_blank" rel="noopener noreferrer" class="instagram-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                    </a>
+                `;
+                
+                return `
+                    <div class="shop-card">
+                        <div class="shop-number">№ ${String(actualIndex + 1).padStart(2, '0')}</div>
+                        <div class="shop-name">${shop.name}</div>
+                        <div class="shop-address">${shop.address}</div>
+                        <div class="shop-meta">
+                            ${typeLink}
+                            ${instagramIcon}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Add click handlers for links in list view
+            setTimeout(() => {
+                const listLinks = listContent.querySelectorAll('a');
+                listLinks.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (link.href) {
+                            e.preventDefault();
+                            window.open(link.href, '_blank', 'noopener,noreferrer');
+                        }
+                    });
+                });
+            }, 0);
+        }
+
+        // Search functionality for list view
+        const listSearchBox = document.getElementById('listSearchBox');
+        listSearchBox.addEventListener('input', (e) => {
+            const query = e.target.value;
+            renderListView(query);
         });
-    </script><script>
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("service-worker.js");
-  }
-</script>
+        
+        // Search functionality for articles
+        const articleSearchBox = document.getElementById('articleSearchBox');
+        articleSearchBox.addEventListener('input', (e) => {
+            const query = e.target.value;
+            renderArticles(query);
+        });
+    </script>
 </body>
 </html>
