@@ -62,23 +62,31 @@
             0% { transform: translateY(0); }
             100% { transform: translateY(10px); }
         }
-         /* Typewriter Effect */
+/* Typewriter Effect */
 .typewriter {
     overflow: hidden;
     border-right: 2px solid var(--dark);
     white-space: nowrap;
-    animation: typing 2.5s steps(40, end) forwards, blink-caret 0.75s step-end infinite;
+    animation: typing-repeat 10s steps(40, end) infinite, blink-caret 0.75s step-end infinite;
     width: 0;
 }
 
-@keyframes typing {
-    from { width: 0; }
-    to { width: 100%; }
+@keyframes typing-repeat {
+    0% { width: 0; }
+    25% { width: 100%; }
+    100% { width: 100%; }
 }
 
 @keyframes blink-caret {
     from, to { border-color: transparent; }
     50% { border-color: var(--dark); }
+}
+
+@keyframes typewriter-loop {
+    0% { width: 0; }
+    25% { width: 100%; }
+    75% { width: 100%; }
+    100% { width: 0; }
 }
         
         .app-container {
@@ -413,19 +421,6 @@
             align-items: center;
             gap: 8px;
             flex-wrap: wrap;
-        }
-        
-        .amenity-icons {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-        }
-        
-        .amenity-icon {
-            width: 16px;
-            height: 16px;
-            fill: var(--dark);
-            opacity: 0.7;
         }
         
         .shop-type {
@@ -815,27 +810,6 @@
         
         .popup-content {
             padding: 4px;
-            position: relative;
-            min-height: 120px;
-        }
-        
-        .popup-content .amenity-icons {
-            position: absolute;
-            bottom: 8px;
-            right: 8px;
-            display: flex;
-            gap: 4px;
-        }
-        
-        .popup-content .amenity-icon {
-            width: 20px;
-            height: 20px;
-        }
-        
-        .popup-spill-badge {
-            position: absolute;
-            top: 8px;
-            right: 8px;
         }
         
         .popup-number {
@@ -1332,20 +1306,11 @@
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
+    <script><script>
         // =============================================================
-        // GOOGLE SHEETS URL - PASTE YOUR PUBLISHED CSV URL HERE
+        // GOOGLE SHEETS INTEGRATION
         // =============================================================
-        // 1. Go to your Google Sheet
-        // 2. File → Share → Publish to web
-        // 3. Select "Entire Document" and "Comma-separated values (.csv)"
-        // 4. Click Publish
-        // 5. Copy the URL (should end with /pub?output=csv)
-        // 6. Paste it between the quotes below:
-        
         const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSmSV7NPuWEwAOauhSt_yhZ_xccnyX5Sux1Xighi_jwZhrSshxVq9shACmv0p8etUB6V9tQ_z4EKiMT/pub?output=csv';
-        
-        // =============================================================
         
         let coffeeShops = [];
         let partnerCafes = [];
@@ -1369,7 +1334,6 @@
                     shop[header] = values[index] || '';
                 });
                 
-                // Build cafe object
                 const cafe = {
                     name: shop.name,
                     address: shop.address,
@@ -1377,24 +1341,18 @@
                     lng: parseFloat(shop.lng),
                     type: shop.type,
                     website: shop.website || null,
-                    instagram: shop.instagram,
-                    hasLatteArt: shop.hasLatteArt && shop.hasLatteArt.toUpperCase() === 'TRUE',
-                    hasBakedGoods: shop.hasBakedGoods && shop.hasBakedGoods.toUpperCase() === 'TRUE',
-                    hasFoodMenu: shop.hasFoodMenu && shop.hasFoodMenu.toUpperCase() === 'TRUE'
+                    instagram: shop.instagram
                 };
                 
-                // Add custom initials if provided
                 if (shop.initials) {
                     cafe.initials = shop.initials;
                 }
                 
                 shops.push(cafe);
                 
-                // Check if partner
                 if (shop.isPartner && shop.isPartner.toUpperCase() === 'TRUE') {
                     partners.push(shop.name);
                     
-                    // Parse hours for partner cafes
                     const periods = [];
                     const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
                     
@@ -1419,7 +1377,6 @@
             return { shops, partners, hours };
         }
         
-        // Load data from Google Sheets
         async function loadFromGoogleSheets() {
             try {
                 console.log('Fetching data from Google Sheets...');
@@ -1431,22 +1388,24 @@
                 partnerCafes = data.partners;
                 cafeHours = data.hours;
                 
-                console.log(`✓ Loaded ${coffeeShops.length} cafes from Google Sheets`);
+                console.log(`✓ Loaded ${coffeeShops.length} cafes`);
                 console.log(`✓ ${partnerCafes.length} partner cafes`);
                 
                 initializeApp();
             } catch (error) {
-                console.error('❌ Error loading Google Sheets:', error);
-                document.body.innerHTML = '<div style="padding: 40px; text-align: center; font-family: monospace;"><h1>Error Loading Data</h1><p>Could not load cafe data from Google Sheets.</p><p>Check the console for details.</p></div>';
+                console.error('❌ Error:', error);
+                document.body.innerHTML = '<div style="padding: 40px; text-align: center;"><h1>Error Loading Data</h1></div>';
             }
         }
         
-        // Initialize app after data is loaded
         function initializeApp() {
         // =============================================================
-        // OLD HARDCODED DATA - Now loaded from Google Sheets
+        // ALL YOUR EXISTING CODE GOES HERE (keep everything below)
         // =============================================================
-        /*
+        // =============================================================
+        // PARTNER CAFES - Edit this list to add/remove partner cafes
+        // Just add or remove cafe names exactly as they appear in the main list
+        // =============================================================
         const partnerCafes = [
             "Fox in the Snow — Italian Village",
             "One Line Coffee — Short North",
@@ -1469,13 +1428,17 @@
             "Two Tigers Coffee",
             "The Lion Coffee Bar",
             "The Roosevelt Coffeehouse",
-            "Tulip Cafe"
+            "Tulip Cafe",
+            "Florin Coffee"
         ];
 
         // =============================================================
-        // COFFEE SHOPS LIST - Now loaded from Google Sheets
+        // COFFEE SHOPS LIST
         // =============================================================
-        /*
+        // To customize map pin initials for any cafe, add: initials: "XX"
+        // Otherwise pins auto-generate from first letters of first two words
+        // =============================================================
+        
         const coffeeShops = [
             { name: "Moonbird Coffee", initials: "MB", address: "1400 Holly Ave, Columbus, OH", lat: 39.9891, lng: -83.0207, type: "Specialty Coffee", website: null, instagram: "moonbirdcoffeeco" },
             { name: "Two Tigers Coffee", address: "3341 N High St, Columbus, OH", lat: 40.0189, lng: -83.0136, type: "Micro Coffee Shop", website: "https://twotigerscoffee.com", instagram: "twotigerscoffee" },
@@ -1540,16 +1503,15 @@
             { name: "East African Coffee House", address: "4359 Morse Rd, Columbus, OH", lat: 40.0632, lng: -82.9209, type: "East African Coffee", website: "https://www.eastafricancoffeehouse.com", instagram: "eastafricancoffeehouse" },
             { name: "Crimson Easton", address: "4066 Worth Ave, Columbus, OH", lat: 40.0491, lng: -82.9168, type: "Roaster & Cafe", website: "https://crimsoncup.com", instagram: "crimsoncolumbus" }
         ];
-        */
 
         let currentView = 'map';
         let filterMode = 'all'; // 'all' or 'partner'
         
         // =============================================================
-        // MANUAL HOURS - Now loaded from Google Sheets
+        // MANUAL HOURS FOR PARTNER CAFES
         // =============================================================
-        /*
-        const cafeHours = {
+        // Add hours for each partner cafe in this format:
+        // "Cafe Name": {
         //     periods: [
         //         { open: { day: 0, time: "0700" }, close: { day: 0, time: "1500" } }, // Sunday
         //         { open: { day: 1, time: "0700" }, close: { day: 1, time: "1500" } }, // Monday
@@ -1563,6 +1525,16 @@
         
         const cafeHours = {
             "Fox in the Snow — Italian Village": {
+                periods: [
+                    { open: { day: 0, time: "0700" }, close: { day: 0, time: "1500" } },
+                    { open: { day: 1, time: "0700" }, close: { day: 1, time: "1500" } },
+                    { open: { day: 2, time: "0700" }, close: { day: 2, time: "1500" } },
+                    { open: { day: 3, time: "0700" }, close: { day: 3, time: "1500" } },
+                    { open: { day: 4, time: "0700" }, close: { day: 4, time: "1500" } },
+                    { open: { day: 5, time: "0700" }, close: { day: 5, time: "1500" } },
+                    { open: { day: 6, time: "0700" }, close: { day: 6, time: "1500" } }
+                ]
+            },"Florin Coffee": {
                 periods: [
                     { open: { day: 0, time: "0700" }, close: { day: 0, time: "1500" } },
                     { open: { day: 1, time: "0700" }, close: { day: 1, time: "1500" } },
@@ -1597,7 +1569,6 @@
             }
             // Add more partner cafes here as you onboard them
         };
-        */
 
         // =============================================================
         // CUSTOM INITIALS - How to customize map pin letters:
@@ -1728,47 +1699,6 @@
             
             return minutes === '00' ? `${hours}${ampm}` : `${hours}:${minutes}${ampm}`;
         }
-        
-        // Generate amenity icons based on cafe features
-        function getAmenityIcons(shop) {
-            let icons = '';
-            
-            // Latte art icon - simple coffee cup with pour
-            if (shop.hasLatteArt) {
-                icons += `
-                    <svg class="amenity-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" title="Latte Art">
-                        <circle cx="12" cy="13" r="9" fill="none" stroke="black" stroke-width="2"/>
-                        <path d="M8 10 Q12 6 16 10" fill="none" stroke="black" stroke-width="1.5"/>
-                        <path d="M9 13 Q12 16 15 13" fill="none" stroke="black" stroke-width="1.5"/>
-                    </svg>
-                `;
-            }
-            
-            // Croissant icon - simple arc shape
-            if (shop.hasBakedGoods) {
-                icons += `
-                    <svg class="amenity-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" title="Baked Goods">
-                        <path d="M4 15 Q4 10 8 8 Q12 6 16 8 Q20 10 20 15 L17 13 Q12 11 7 13 Z" fill="black"/>
-                    </svg>
-                `;
-            }
-            
-            // Food menu icon - simple plate with utensils
-            if (shop.hasFoodMenu) {
-                icons += `
-                    <svg class="amenity-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" title="Food Menu">
-                        <circle cx="12" cy="12" r="9" fill="black"/>
-                        <rect x="8" y="8" width="1.5" height="8" fill="white"/>
-                        <rect x="11.25" y="8" width="1.5" height="5" fill="white"/>
-                        <rect x="14.5" y="8" width="1.5" height="8" fill="white"/>
-                        <path d="M8 15.5 L9.5 15.5 L9.5 16 Q9.5 16.5 9 16.5 L8.5 16.5 Q8 16.5 8 16 Z" fill="white"/>
-                        <ellipse cx="15.25" cy="16.5" rx="1" ry="0.5" fill="white"/>
-                    </svg>
-                `;
-            }
-            
-            return icons ? `<div class="amenity-icons">${icons}</div>` : '';
-        }
 
         document.getElementById('shopCount').textContent = coffeeShops.length;
         
@@ -1867,25 +1797,6 @@
             const hoursData = getHoursDisplay(shop);
             const hoursHTML = hoursData ? `<div class="shop-hours ${hoursData.isOpen ? 'open' : 'closed'}">${hoursData.text}</div>` : '';
             
-            // Get amenity icons
-            const popupAmenityIcons = getAmenityIcons(shop);
-            
-            // S badge for partner cafes in popup
-            const popupSpillBadge = isPartnerCafe(shop.name) ? 
-                `<div class="popup-spill-badge">
-                    <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <linearGradient id="spillGradientPopup${index}" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#4A90E2;stop-opacity:1" />
-                                <stop offset="50%" style="stop-color:#9B59B6;stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#FF6B9D;stop-opacity:1" />
-                            </linearGradient>
-                        </defs>
-                        <circle cx="12" cy="12" r="11" fill="url(#spillGradientPopup${index})" stroke="#2C2C2C" stroke-width="1"/>
-                        <text x="12" y="16" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">S</text>
-                    </svg>
-                </div>` : '';
-            
             const marker = L.marker([shop.lat, shop.lng], { icon: customIcon })
                 .addTo(map)
                 .bindTooltip(shop.name, {
@@ -1896,7 +1807,6 @@
                 })
                 .bindPopup(`
                     <div class="popup-content">
-                        ${popupSpillBadge}
                         <div class="popup-title">${shop.name}</div>
                         <div class="popup-address">${shop.address}</div>
                         ${hoursHTML}
@@ -1908,7 +1818,6 @@
                             <a href="${googleMapsUrl}" target="_blank" class="dir-btn" rel="noopener noreferrer">Google</a>
                             <a href="${appleMapsUrl}" target="_blank" class="dir-btn" rel="noopener noreferrer">Apple</a>
                         </div>
-                        ${popupAmenityIcons}
                     </div>
                 `, {
                     closeButton: true,
@@ -2043,8 +1952,6 @@
                         </svg>
                     </div>` : '';
                 
-                const amenityIcons = getAmenityIcons(shop);
-                
                 return `
                     <div class="shop-card">
                         <div class="shop-name">${shop.name}</div>
@@ -2052,7 +1959,6 @@
                         <div class="shop-hours-placeholder" data-shop-index="${actualIndex}"></div>
                         <div class="shop-meta">
                             ${typeLink}
-                            ${amenityIcons}
                             ${instagramIcon}
                             <div class="directions-buttons">
                                 <a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer" class="dir-btn">Google</a>
@@ -2245,29 +2151,37 @@
                 });
                 return;
             }
-            
-            let firstMatch = null;
-            
+           
+// Center map on first match when Enter is pressed
+mapSearchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        const query = e.target.value.toLowerCase();
+        if (!query) return;
+        
+        // Find first matching cafe
+        const firstMatch = markers.find(({ shop }) => {
+            const searchText = `${shop.name} ${shop.address} ${shop.type}`.toLowerCase();
+            return searchText.includes(query);
+        });
+        
+        // Center map on first match with zoom level 13
+        if (firstMatch) {
+            map.setView([firstMatch.shop.lat, firstMatch.shop.lng], 13, {
+                animate: true,
+                duration: 0.5
+            });
+        }
+    }
+});
             // Filter markers based on search
             markers.forEach(({ marker, shop }) => {
                 const searchText = `${shop.name} ${shop.address} ${shop.type}`.toLowerCase();
                 if (searchText.includes(query)) {
                     marker.setOpacity(1);
-                    if (!firstMatch) {
-                        firstMatch = { marker, shop };
-                    }
                 } else {
                     marker.setOpacity(0.2);
                 }
             });
-            
-            // Center map on first matching result
-            if (firstMatch) {
-                map.setView([firstMatch.shop.lat, firstMatch.shop.lng], 15, {
-                    animate: true,
-                    duration: 0.5
-                });
-            }
         });
         
         // Close search when clicking outside
@@ -2280,11 +2194,6 @@
                 });
             }
         });
-        
-        } // End of initializeApp function
-        
-        // Load data from Google Sheets when page loads
-        loadFromGoogleSheets();
         
     </script>
         <script>
