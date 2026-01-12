@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-     <link rel="apple-touch-icon" href="s.png">
-<link rel="icon" href="s.png">
+     <link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" href="icon.png">
     <link rel="manifest" href="manifest.json">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -413,6 +413,19 @@
             align-items: center;
             gap: 8px;
             flex-wrap: wrap;
+        }
+        
+        .amenity-icons {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+        
+        .amenity-icon {
+            width: 16px;
+            height: 16px;
+            fill: var(--dark);
+            opacity: 0.7;
         }
         
         .shop-type {
@@ -1309,7 +1322,7 @@
         // 5. Copy the URL (should end with /pub?output=csv)
         // 6. Paste it between the quotes below:
         
-        const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSmSV7NPuWEwAOauhSt_yhZ_xccnyX5Sux1Xighi_jwZhrSshxVq9shACmv0p8etUB6V9tQ_z4EKiMT/pub?output=csv';
+        const GOOGLE_SHEET_URL = 'PASTE_YOUR_URL_HERE';
         
         // =============================================================
         
@@ -1343,7 +1356,10 @@
                     lng: parseFloat(shop.lng),
                     type: shop.type,
                     website: shop.website || null,
-                    instagram: shop.instagram
+                    instagram: shop.instagram,
+                    hasLatteArt: shop.hasLatteArt && shop.hasLatteArt.toUpperCase() === 'TRUE',
+                    hasBakedGoods: shop.hasBakedGoods && shop.hasBakedGoods.toUpperCase() === 'TRUE',
+                    hasFoodMenu: shop.hasFoodMenu && shop.hasFoodMenu.toUpperCase() === 'TRUE'
                 };
                 
                 // Add custom initials if provided
@@ -1691,6 +1707,41 @@
             
             return minutes === '00' ? `${hours}${ampm}` : `${hours}:${minutes}${ampm}`;
         }
+        
+        // Generate amenity icons based on cafe features
+        function getAmenityIcons(shop) {
+            let icons = '';
+            
+            // Latte art icon (coffee cup with heart)
+            if (shop.hasLatteArt) {
+                icons += `
+                    <svg class="amenity-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" title="Latte Art">
+                        <path d="M2 19h18v2H2v-2zm2-7h10V4H4v8zm12 0V4h2c1.1 0 2 .9 2 2v4c0 1.1-.9 2-2 2h-2zm-2 0c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2v-1h12v1z"/>
+                        <path d="M9 6.5c-.55 0-1 .45-1 1 0 .3.13.57.33.76.53.5.67 1.5.67 1.74h1c0-.55.2-1.64 1-2.3.33-.27.5-.65.5-1.04 0-.83-.67-1.5-1.5-1.5-.28 0-.53.08-.76.21C9.08 5.58 9 5.79 9 6c0 .28.22.5.5.5s.5-.22.5-.5c0-.08.04-.13.08-.17.05-.04.12-.08.17-.08.28 0 .5.22.5.5 0 .13-.05.24-.14.33-.36.36-.61.86-.61 1.42z"/>
+                    </svg>
+                `;
+            }
+            
+            // Croissant icon (baked goods)
+            if (shop.hasBakedGoods) {
+                icons += `
+                    <svg class="amenity-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" title="Baked Goods">
+                        <path d="M20.5 10.5c-.83 0-1.5.67-1.5 1.5v.5c-.83 0-1.5.67-1.5 1.5V16c0 .83.67 1.5 1.5 1.5h.5c.83 0 1.5-.67 1.5-1.5v-4c0-.83-.67-1.5-1.5-1.5zm-16 0C3.67 10.5 3 11.17 3 12v4c0 .83.67 1.5 1.5 1.5H5c.83 0 1.5-.67 1.5-1.5v-2.5c0-.83-.67-1.5-1.5-1.5V12c0-.83-.67-1.5-1.5-1.5zm8-7C9.96 3.5 7.81 5.65 7.81 8.19c0 1.04.34 2 .92 2.78l3.58 4.79c.33.44.95.53 1.39.2.44-.33.53-.95.2-1.39l-3.58-4.79c-.29-.39-.45-.87-.45-1.39 0-1.27 1.03-2.31 2.31-2.31s2.31 1.03 2.31 2.31c0 .52-.17 1-.45 1.39l-3.58 4.79c-.33.44-.24 1.06.2 1.39.44.33 1.06.24 1.39-.2l3.58-4.79c.58-.78.92-1.74.92-2.78 0-2.54-2.15-4.69-4.69-4.69z"/>
+                    </svg>
+                `;
+            }
+            
+            // Plate with utensils icon (food menu)
+            if (shop.hasFoodMenu) {
+                icons += `
+                    <svg class="amenity-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" title="Food Menu">
+                        <path d="M8.1 13.34l2.83-2.83L3.91 3.5c-1.56 1.56-1.56 4.09 0 5.66l4.19 4.18zm6.78-1.81c1.53.71 3.68.21 5.27-1.38 1.91-1.91 2.28-4.65.81-6.12-1.46-1.46-4.2-1.1-6.12.81-1.59 1.59-2.09 3.74-1.38 5.27L3.7 19.87l1.41 1.41L12 14.41l6.88 6.88 1.41-1.41L13.41 13l1.47-1.47z"/>
+                    </svg>
+                `;
+            }
+            
+            return icons ? `<div class="amenity-icons">${icons}</div>` : '';
+        }
 
         document.getElementById('shopCount').textContent = coffeeShops.length;
         
@@ -1789,6 +1840,9 @@
             const hoursData = getHoursDisplay(shop);
             const hoursHTML = hoursData ? `<div class="shop-hours ${hoursData.isOpen ? 'open' : 'closed'}">${hoursData.text}</div>` : '';
             
+            // Get amenity icons
+            const popupAmenityIcons = getAmenityIcons(shop);
+            
             const marker = L.marker([shop.lat, shop.lng], { icon: customIcon })
                 .addTo(map)
                 .bindTooltip(shop.name, {
@@ -1804,6 +1858,7 @@
                         ${hoursHTML}
                         <div class="popup-meta">
                             ${popupTypeLink}
+                            ${popupAmenityIcons}
                             ${instagramIcon}
                         </div>
                         <div class="directions-buttons">
@@ -1944,6 +1999,8 @@
                         </svg>
                     </div>` : '';
                 
+                const amenityIcons = getAmenityIcons(shop);
+                
                 return `
                     <div class="shop-card">
                         <div class="shop-name">${shop.name}</div>
@@ -1951,6 +2008,7 @@
                         <div class="shop-hours-placeholder" data-shop-index="${actualIndex}"></div>
                         <div class="shop-meta">
                             ${typeLink}
+                            ${amenityIcons}
                             ${instagramIcon}
                             <div class="directions-buttons">
                                 <a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer" class="dir-btn">Google</a>
