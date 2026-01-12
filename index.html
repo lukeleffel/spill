@@ -815,6 +815,27 @@
         
         .popup-content {
             padding: 4px;
+            position: relative;
+            min-height: 120px;
+        }
+        
+        .popup-content .amenity-icons {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            display: flex;
+            gap: 4px;
+        }
+        
+        .popup-content .amenity-icon {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .popup-spill-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
         }
         
         .popup-number {
@@ -1712,30 +1733,40 @@
         function getAmenityIcons(shop) {
             let icons = '';
             
-            // Latte art icon (coffee cup with heart)
+            // Latte art icon (inspired by latte art design)
             if (shop.hasLatteArt) {
                 icons += `
                     <svg class="amenity-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" title="Latte Art">
-                        <path d="M2 19h18v2H2v-2zm2-7h10V4H4v8zm12 0V4h2c1.1 0 2 .9 2 2v4c0 1.1-.9 2-2 2h-2zm-2 0c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2v-1h12v1z"/>
-                        <path d="M9 6.5c-.55 0-1 .45-1 1 0 .3.13.57.33.76.53.5.67 1.5.67 1.74h1c0-.55.2-1.64 1-2.3.33-.27.5-.65.5-1.04 0-.83-.67-1.5-1.5-1.5-.28 0-.53.08-.76.21C9.08 5.58 9 5.79 9 6c0 .28.22.5.5.5s.5-.22.5-.5c0-.08.04-.13.08-.17.05-.04.12-.08.17-.08.28 0 .5.22.5.5 0 .13-.05.24-.14.33-.36.36-.61.86-.61 1.42z"/>
+                        <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M12 6 C10 8, 10 10, 12 12 C14 10, 14 8, 12 6 M9 12 C9 14, 10 16, 12 18 C14 16, 15 14, 15 12" fill="none" stroke="currentColor" stroke-width="1.2"/>
+                        <ellipse cx="12" cy="12" rx="4" ry="2" fill="none" stroke="currentColor" stroke-width="1"/>
+                        <ellipse cx="12" cy="14" rx="6" ry="3" fill="none" stroke="currentColor" stroke-width="1"/>
+                        <ellipse cx="12" cy="16" rx="8" ry="4" fill="none" stroke="currentColor" stroke-width="1"/>
                     </svg>
                 `;
             }
             
-            // Croissant icon (baked goods)
+            // Croissant icon
             if (shop.hasBakedGoods) {
                 icons += `
                     <svg class="amenity-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" title="Baked Goods">
-                        <path d="M20.5 10.5c-.83 0-1.5.67-1.5 1.5v.5c-.83 0-1.5.67-1.5 1.5V16c0 .83.67 1.5 1.5 1.5h.5c.83 0 1.5-.67 1.5-1.5v-4c0-.83-.67-1.5-1.5-1.5zm-16 0C3.67 10.5 3 11.17 3 12v4c0 .83.67 1.5 1.5 1.5H5c.83 0 1.5-.67 1.5-1.5v-2.5c0-.83-.67-1.5-1.5-1.5V12c0-.83-.67-1.5-1.5-1.5zm8-7C9.96 3.5 7.81 5.65 7.81 8.19c0 1.04.34 2 .92 2.78l3.58 4.79c.33.44.95.53 1.39.2.44-.33.53-.95.2-1.39l-3.58-4.79c-.29-.39-.45-.87-.45-1.39 0-1.27 1.03-2.31 2.31-2.31s2.31 1.03 2.31 2.31c0 .52-.17 1-.45 1.39l-3.58 4.79c-.33.44-.24 1.06.2 1.39.44.33 1.06.24 1.39-.2l3.58-4.79c.58-.78.92-1.74.92-2.78 0-2.54-2.15-4.69-4.69-4.69z"/>
+                        <path d="M4 14 Q3 16 4 18 L8 16 Q7 14 8 12 M8 12 Q9 10 12 9 Q15 10 16 12 M16 12 Q17 14 16 16 L20 18 Q21 16 20 14 M8 12 L16 12" fill="currentColor"/>
+                        <path d="M6 15 L10 13.5 M14 13.5 L18 15" stroke="white" stroke-width="0.5" fill="none"/>
                     </svg>
                 `;
             }
             
-            // Plate with utensils icon (food menu)
+            // Plate with utensils icon (circular design)
             if (shop.hasFoodMenu) {
                 icons += `
                     <svg class="amenity-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" title="Food Menu">
-                        <path d="M8.1 13.34l2.83-2.83L3.91 3.5c-1.56 1.56-1.56 4.09 0 5.66l4.19 4.18zm6.78-1.81c1.53.71 3.68.21 5.27-1.38 1.91-1.91 2.28-4.65.81-6.12-1.46-1.46-4.2-1.1-6.12.81-1.59 1.59-2.09 3.74-1.38 5.27L3.7 19.87l1.41 1.41L12 14.41l6.88 6.88 1.41-1.41L13.41 13l1.47-1.47z"/>
+                        <circle cx="12" cy="12" r="10" fill="currentColor"/>
+                        <path d="M8 7 L8 12 M8 9.5 Q8 8 9.5 8" stroke="white" stroke-width="1" fill="none"/>
+                        <rect x="7.5" y="12" width="1" height="5" fill="white"/>
+                        <rect x="10.5" y="7" width="1" height="6" fill="white" rx="0.5"/>
+                        <rect x="10" y="13" width="2" height="4" fill="white" rx="0.3"/>
+                        <path d="M14 7 L14 11 Q14 12 15 12 L15 17" stroke="white" stroke-width="1" fill="none"/>
+                        <ellipse cx="15" cy="17.5" rx="0.8" ry="0.5" fill="white"/>
                     </svg>
                 `;
             }
@@ -1843,6 +1874,22 @@
             // Get amenity icons
             const popupAmenityIcons = getAmenityIcons(shop);
             
+            // S badge for partner cafes in popup
+            const popupSpillBadge = isPartnerCafe(shop.name) ? 
+                `<div class="popup-spill-badge">
+                    <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="spillGradientPopup${index}" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#4A90E2;stop-opacity:1" />
+                                <stop offset="50%" style="stop-color:#9B59B6;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#FF6B9D;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <circle cx="12" cy="12" r="11" fill="url(#spillGradientPopup${index})" stroke="#2C2C2C" stroke-width="1"/>
+                        <text x="12" y="16" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">S</text>
+                    </svg>
+                </div>` : '';
+            
             const marker = L.marker([shop.lat, shop.lng], { icon: customIcon })
                 .addTo(map)
                 .bindTooltip(shop.name, {
@@ -1853,14 +1900,20 @@
                 })
                 .bindPopup(`
                     <div class="popup-content">
+                        ${popupSpillBadge}
                         <div class="popup-title">${shop.name}</div>
                         <div class="popup-address">${shop.address}</div>
                         ${hoursHTML}
                         <div class="popup-meta">
                             ${popupTypeLink}
-                            ${popupAmenityIcons}
                             ${instagramIcon}
                         </div>
+                        <div class="directions-buttons">
+                            <a href="${googleMapsUrl}" target="_blank" class="dir-btn" rel="noopener noreferrer">Google</a>
+                            <a href="${appleMapsUrl}" target="_blank" class="dir-btn" rel="noopener noreferrer">Apple</a>
+                        </div>
+                        ${popupAmenityIcons}
+                    </div>
                         <div class="directions-buttons">
                             <a href="${googleMapsUrl}" target="_blank" class="dir-btn" rel="noopener noreferrer">Google</a>
                             <a href="${appleMapsUrl}" target="_blank" class="dir-btn" rel="noopener noreferrer">Apple</a>
