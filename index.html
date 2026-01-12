@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
      <link rel="apple-touch-icon" href="icon.png">
-<link rel="icon" href="s.png">
+<link rel="icon" href="icon.png">
     <link rel="manifest" href="manifest.json">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spill Coffee Map - Independent Cafe Culture</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
@@ -66,9 +67,8 @@
     overflow: hidden;
     border-right: 2px solid var(--dark);
     white-space: nowrap;
-    animation: typing 2.5s steps(40, end), blink-caret 0.75s step-end infinite;
+    animation: typing 2.5s steps(40, end) forwards, blink-caret 0.75s step-end infinite;
     width: 0;
-    animation-fill-mode: forwards;
 }
 
 @keyframes typing {
@@ -174,7 +174,7 @@
             cursor: pointer;
             transition: all 0.2s;
             padding: 6px 10px;
-            border: 2px solid transparent;
+            border: 2px dashed rgba(255, 107, 157, 0.5);
             flex: 1;
         }
         
@@ -230,11 +230,6 @@
             cursor: pointer;
             box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
             transition: all 0.2s;
-        }
-        
-        .view-btn[data-view="join"]:hover {
-            background: var(--accent-orange);
-            color: white;
         }
         
         .view-btn:hover {
@@ -388,6 +383,29 @@
             margin-bottom: 10px;
             line-height: 1.6;
             opacity: 0.8;
+        }
+        
+        .shop-hours {
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            padding: 4px 10px;
+            display: inline-block;
+            border: 2px solid var(--dark);
+            background: rgba(255, 255, 255, 0.6);
+            letter-spacing: 0.05em;
+        }
+        
+        .shop-hours.open {
+            color: var(--accent-teal);
+            border-color: var(--accent-teal);
+            background: rgba(32, 178, 170, 0.1);
+        }
+        
+        .shop-hours.closed {
+            color: var(--retro-pink);
+            border-color: var(--retro-pink);
+            background: rgba(255, 107, 157, 0.1);
         }
         
         .shop-meta {
@@ -809,6 +827,11 @@
             color: var(--dark);
             margin-bottom: 8px;
             opacity: 0.8;
+        }
+        
+        .popup-content .shop-hours {
+            margin-bottom: 12px;
+            font-size: 10px;
         }
         
         .popup-meta {
@@ -1277,10 +1300,119 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         // =============================================================
-        // PARTNER CAFES - Edit this list to add/remove partner cafes
-        // Just add or remove cafe names exactly as they appear in the main list
+        // GOOGLE SHEETS URL - PASTE YOUR PUBLISHED CSV URL HERE
         // =============================================================
+        // 1. Go to your Google Sheet
+        // 2. File → Share → Publish to web
+        // 3. Select "Entire Document" and "Comma-separated values (.csv)"
+        // 4. Click Publish
+        // 5. Copy the URL (should end with /pub?output=csv)
+        // 6. Paste it between the quotes below:
+        
+        const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSmSV7NPuWEwAOauhSt_yhZ_xccnyX5Sux1Xighi_jwZhrSshxVq9shACmv0p8etUB6V9tQ_z4EKiMT/pub?output=csv';
+        
+        // =============================================================
+        
+        let coffeeShops = [];
+        let partnerCafes = [];
+        let cafeHours = {};
+        
+        // Parse CSV from Google Sheets
+        function parseCSV(csv) {
+            const lines = csv.split('\n');
+            const headers = lines[0].split(',').map(h => h.trim());
+            const shops = [];
+            const partners = [];
+            const hours = {};
+            
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                
+                const values = lines[i].split(',').map(v => v.trim());
+                const shop = {};
+                
+                headers.forEach((header, index) => {
+                    shop[header] = values[index] || '';
+                });
+                
+                // Build cafe object
+                const cafe = {
+                    name: shop.name,
+                    address: shop.address,
+                    lat: parseFloat(shop.lat),
+                    lng: parseFloat(shop.lng),
+                    type: shop.type,
+                    website: shop.website || null,
+                    instagram: shop.instagram
+                };
+                
+                // Add custom initials if provided
+                if (shop.initials) {
+                    cafe.initials = shop.initials;
+                }
+                
+                shops.push(cafe);
+                
+                // Check if partner
+                if (shop.isPartner && shop.isPartner.toUpperCase() === 'TRUE') {
+                    partners.push(shop.name);
+                    
+                    // Parse hours for partner cafes
+                    const periods = [];
+                    const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+                    
+                    days.forEach((day, dayIndex) => {
+                        const openTime = shop[`${day}_open`];
+                        const closeTime = shop[`${day}_close`];
+                        
+                        if (openTime && closeTime) {
+                            periods.push({
+                                open: { day: dayIndex, time: openTime },
+                                close: { day: dayIndex, time: closeTime }
+                            });
+                        }
+                    });
+                    
+                    if (periods.length > 0) {
+                        hours[shop.name] = { periods };
+                    }
+                }
+            }
+            
+            return { shops, partners, hours };
+        }
+        
+        // Load data from Google Sheets
+        async function loadFromGoogleSheets() {
+            try {
+                console.log('Fetching data from Google Sheets...');
+                const response = await fetch(GOOGLE_SHEET_URL);
+                const csv = await response.text();
+                const data = parseCSV(csv);
+                
+                coffeeShops = data.shops;
+                partnerCafes = data.partners;
+                cafeHours = data.hours;
+                
+                console.log(`✓ Loaded ${coffeeShops.length} cafes from Google Sheets`);
+                console.log(`✓ ${partnerCafes.length} partner cafes`);
+                
+                initializeApp();
+            } catch (error) {
+                console.error('❌ Error loading Google Sheets:', error);
+                document.body.innerHTML = '<div style="padding: 40px; text-align: center; font-family: monospace;"><h1>Error Loading Data</h1><p>Could not load cafe data from Google Sheets.</p><p>Check the console for details.</p></div>';
+            }
+        }
+        
+        // Initialize app after data is loaded
+        function initializeApp() {
+        // =============================================================
+        // OLD HARDCODED DATA - Now loaded from Google Sheets
+        // =============================================================
+        /*
         const partnerCafes = [
+            "Fox in the Snow — Italian Village",
+            "One Line Coffee — Short North",
             "Honey Cup Coffee",
             "Northstar Cafe — Short North",
             "Begin Cafe",
@@ -1304,12 +1436,9 @@
         ];
 
         // =============================================================
-        // COFFEE SHOPS LIST
+        // COFFEE SHOPS LIST - Now loaded from Google Sheets
         // =============================================================
-        // To customize map pin initials for any cafe, add: initials: "XX"
-        // Otherwise pins auto-generate from first letters of first two words
-        // =============================================================
-        
+        /*
         const coffeeShops = [
             { name: "Moonbird Coffee", initials: "MB", address: "1400 Holly Ave, Columbus, OH", lat: 39.9891, lng: -83.0207, type: "Specialty Coffee", website: null, instagram: "moonbirdcoffeeco" },
             { name: "Two Tigers Coffee", address: "3341 N High St, Columbus, OH", lat: 40.0189, lng: -83.0136, type: "Micro Coffee Shop", website: "https://twotigerscoffee.com", instagram: "twotigerscoffee" },
@@ -1374,9 +1503,64 @@
             { name: "East African Coffee House", address: "4359 Morse Rd, Columbus, OH", lat: 40.0632, lng: -82.9209, type: "East African Coffee", website: "https://www.eastafricancoffeehouse.com", instagram: "eastafricancoffeehouse" },
             { name: "Crimson Easton", address: "4066 Worth Ave, Columbus, OH", lat: 40.0491, lng: -82.9168, type: "Roaster & Cafe", website: "https://crimsoncup.com", instagram: "crimsoncolumbus" }
         ];
+        */
 
         let currentView = 'map';
         let filterMode = 'all'; // 'all' or 'partner'
+        
+        // =============================================================
+        // MANUAL HOURS - Now loaded from Google Sheets
+        // =============================================================
+        /*
+        const cafeHours = {
+        //     periods: [
+        //         { open: { day: 0, time: "0700" }, close: { day: 0, time: "1500" } }, // Sunday
+        //         { open: { day: 1, time: "0700" }, close: { day: 1, time: "1500" } }, // Monday
+        //         ... etc for each day (0=Sunday, 1=Monday, 2=Tuesday, etc.)
+        //     ]
+        // }
+        // 
+        // Time format: "0700" = 7:00 AM, "1430" = 2:30 PM, "2100" = 9:00 PM
+        // Leave out days when cafe is closed
+        // =============================================================
+        
+        const cafeHours = {
+            "Fox in the Snow — Italian Village": {
+                periods: [
+                    { open: { day: 0, time: "0700" }, close: { day: 0, time: "1500" } },
+                    { open: { day: 1, time: "0700" }, close: { day: 1, time: "1500" } },
+                    { open: { day: 2, time: "0700" }, close: { day: 2, time: "1500" } },
+                    { open: { day: 3, time: "0700" }, close: { day: 3, time: "1500" } },
+                    { open: { day: 4, time: "0700" }, close: { day: 4, time: "1500" } },
+                    { open: { day: 5, time: "0700" }, close: { day: 5, time: "1500" } },
+                    { open: { day: 6, time: "0700" }, close: { day: 6, time: "1500" } }
+                ]
+            },
+            "One Line Coffee — Short North": {
+                periods: [
+                    { open: { day: 0, time: "0730" }, close: { day: 0, time: "1700" } },
+                    { open: { day: 1, time: "0630" }, close: { day: 1, time: "1700" } },
+                    { open: { day: 2, time: "0630" }, close: { day: 2, time: "1700" } },
+                    { open: { day: 3, time: "0630" }, close: { day: 3, time: "1700" } },
+                    { open: { day: 4, time: "0630" }, close: { day: 4, time: "1700" } },
+                    { open: { day: 5, time: "0630" }, close: { day: 5, time: "1700" } },
+                    { open: { day: 6, time: "0730" }, close: { day: 6, time: "1700" } }
+                ]
+            },
+            "Brioso Coffee": {
+                periods: [
+                    { open: { day: 0, time: "0800" }, close: { day: 0, time: "1600" } },
+                    { open: { day: 1, time: "0700" }, close: { day: 1, time: "1800" } },
+                    { open: { day: 2, time: "0700" }, close: { day: 2, time: "1800" } },
+                    { open: { day: 3, time: "0700" }, close: { day: 3, time: "1800" } },
+                    { open: { day: 4, time: "0700" }, close: { day: 4, time: "1800" } },
+                    { open: { day: 5, time: "0700" }, close: { day: 5, time: "1800" } },
+                    { open: { day: 6, time: "0800" }, close: { day: 6, time: "1700" } }
+                ]
+            }
+            // Add more partner cafes here as you onboard them
+        };
+        */
 
         // =============================================================
         // CUSTOM INITIALS - How to customize map pin letters:
@@ -1403,6 +1587,109 @@
 
         function isPartnerCafe(cafeName) {
             return partnerCafes.includes(cafeName);
+        }
+        
+        // Hours display logic - only for partner cafes
+        function getHoursDisplay(shop) {
+            // Only show hours for partner cafes
+            if (!isPartnerCafe(shop.name)) return null;
+            
+            // Check if we have hours for this cafe
+            const hours = cafeHours[shop.name];
+            if (!hours) return null;
+            
+            return formatHoursText(hours);
+        }
+        
+        function formatHoursText(openingHours) {
+            if (!openingHours || !openingHours.periods) return null;
+            
+            const now = new Date();
+            const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
+            const currentTime = now.getHours() * 100 + now.getMinutes(); // e.g., 1430 for 2:30 PM
+            
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const pluralDays = ['Sundays', 'Mondays', 'Tuesdays', 'Wednesdays', 'Thursdays', 'Fridays', 'Saturdays'];
+            
+            // Find today's hours
+            const todaysPeriod = openingHours.periods.find(p => p.open.day === currentDay);
+            
+            if (!todaysPeriod) {
+                // Closed today, find next open day
+                let nextDay = (currentDay + 1) % 7;
+                let daysChecked = 0;
+                
+                while (daysChecked < 7) {
+                    const nextPeriod = openingHours.periods.find(p => p.open.day === nextDay);
+                    if (nextPeriod) {
+                        const openTime = formatTime(nextPeriod.open.time);
+                        return {
+                            text: `Opens ${openTime} on ${pluralDays[nextDay]}`,
+                            isOpen: false
+                        };
+                    }
+                    nextDay = (nextDay + 1) % 7;
+                    daysChecked++;
+                }
+                
+                return { text: 'Hours unavailable', isOpen: false };
+            }
+            
+            // Check if currently open
+            const openTime = parseInt(todaysPeriod.open.time);
+            const closeTime = todaysPeriod.close ? parseInt(todaysPeriod.close.time) : 2359;
+            
+            const isOpen = currentTime >= openTime && currentTime < closeTime;
+            
+            if (isOpen) {
+                const closingTime = formatTime(todaysPeriod.close.time);
+                return {
+                    text: `Open til ${closingTime} on ${pluralDays[currentDay]}`,
+                    isOpen: true
+                };
+            } else {
+                // Closed now
+                if (currentTime < openTime) {
+                    // Opens later today
+                    const openingTime = formatTime(todaysPeriod.open.time);
+                    return {
+                        text: `Opens ${openingTime} on ${pluralDays[currentDay]}`,
+                        isOpen: false
+                    };
+                } else {
+                    // Closed for the day, find next open day
+                    let nextDay = (currentDay + 1) % 7;
+                    let daysChecked = 0;
+                    
+                    while (daysChecked < 7) {
+                        const nextPeriod = openingHours.periods.find(p => p.open.day === nextDay);
+                        if (nextPeriod) {
+                            const openTime = formatTime(nextPeriod.open.time);
+                            return {
+                                text: `Opens ${openTime} on ${pluralDays[nextDay]}`,
+                                isOpen: false
+                            };
+                        }
+                        nextDay = (nextDay + 1) % 7;
+                        daysChecked++;
+                    }
+                }
+            }
+            
+            return { text: 'Hours unavailable', isOpen: false };
+        }
+        
+        function formatTime(timeString) {
+            if (!timeString) return '';
+            const time = timeString.toString().padStart(4, '0');
+            let hours = parseInt(time.substring(0, 2));
+            const minutes = time.substring(2, 4);
+            const ampm = hours >= 12 ? 'pm' : 'am';
+            
+            if (hours === 0) hours = 12;
+            else if (hours > 12) hours -= 12;
+            
+            return minutes === '00' ? `${hours}${ampm}` : `${hours}:${minutes}${ampm}`;
         }
 
         document.getElementById('shopCount').textContent = coffeeShops.length;
@@ -1498,6 +1785,10 @@
             const badgeId = `badge-${index}`;
             const popupTypeLink = linkUrl ? `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer" class="popup-type" id="${badgeId}">${shop.type}</a>` : `<span class="popup-type no-link">${shop.type}</span>`;
             
+            // Get hours for popup if available
+            const hoursData = getHoursDisplay(shop);
+            const hoursHTML = hoursData ? `<div class="shop-hours ${hoursData.isOpen ? 'open' : 'closed'}">${hoursData.text}</div>` : '';
+            
             const marker = L.marker([shop.lat, shop.lng], { icon: customIcon })
                 .addTo(map)
                 .bindTooltip(shop.name, {
@@ -1508,9 +1799,9 @@
                 })
                 .bindPopup(`
                     <div class="popup-content">
-                        <div class="popup-number">№ ${String(index + 1).padStart(2, '0')}</div>
                         <div class="popup-title">${shop.name}</div>
                         <div class="popup-address">${shop.address}</div>
+                        ${hoursHTML}
                         <div class="popup-meta">
                             ${popupTypeLink}
                             ${instagramIcon}
@@ -1657,6 +1948,7 @@
                     <div class="shop-card">
                         <div class="shop-name">${shop.name}</div>
                         <div class="shop-address">${shop.address}</div>
+                        <div class="shop-hours-placeholder" data-shop-index="${actualIndex}"></div>
                         <div class="shop-meta">
                             ${typeLink}
                             ${instagramIcon}
@@ -1669,6 +1961,21 @@
                     </div>
                 `;
             }).join('');
+            
+            // Populate hours for shops that have them
+            setTimeout(() => {
+                filteredShops.forEach((shop, index) => {
+                    const actualIndex = coffeeShops.indexOf(shop);
+                    const hoursPlaceholder = listContent.querySelector(`[data-shop-index="${actualIndex}"]`);
+                    if (hoursPlaceholder) {
+                        const hoursData = getHoursDisplay(shop);
+                        if (hoursData) {
+                            const statusClass = hoursData.isOpen ? 'open' : 'closed';
+                            hoursPlaceholder.innerHTML = `<div class="shop-hours ${statusClass}">${hoursData.text}</div>`;
+                        }
+                    }
+                });
+            }, 0);
             
             // Add click handlers for links in list view
             setTimeout(() => {
@@ -1858,6 +2165,11 @@
                 });
             }
         });
+        
+        } // End of initializeApp function
+        
+        // Load data from Google Sheets when page loads
+        loadFromGoogleSheets();
         
     </script>
         <script>
