@@ -1733,40 +1733,36 @@
         function getAmenityIcons(shop) {
             let icons = '';
             
-            // Latte art icon (inspired by latte art design)
+            // Latte art icon - simple coffee cup with pour
             if (shop.hasLatteArt) {
                 icons += `
                     <svg class="amenity-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" title="Latte Art">
-                        <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.5"/>
-                        <path d="M12 6 C10 8, 10 10, 12 12 C14 10, 14 8, 12 6 M9 12 C9 14, 10 16, 12 18 C14 16, 15 14, 15 12" fill="none" stroke="currentColor" stroke-width="1.2"/>
-                        <ellipse cx="12" cy="12" rx="4" ry="2" fill="none" stroke="currentColor" stroke-width="1"/>
-                        <ellipse cx="12" cy="14" rx="6" ry="3" fill="none" stroke="currentColor" stroke-width="1"/>
-                        <ellipse cx="12" cy="16" rx="8" ry="4" fill="none" stroke="currentColor" stroke-width="1"/>
+                        <circle cx="12" cy="13" r="9" fill="none" stroke="black" stroke-width="2"/>
+                        <path d="M8 10 Q12 6 16 10" fill="none" stroke="black" stroke-width="1.5"/>
+                        <path d="M9 13 Q12 16 15 13" fill="none" stroke="black" stroke-width="1.5"/>
                     </svg>
                 `;
             }
             
-            // Croissant icon
+            // Croissant icon - simple arc shape
             if (shop.hasBakedGoods) {
                 icons += `
                     <svg class="amenity-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" title="Baked Goods">
-                        <path d="M4 14 Q3 16 4 18 L8 16 Q7 14 8 12 M8 12 Q9 10 12 9 Q15 10 16 12 M16 12 Q17 14 16 16 L20 18 Q21 16 20 14 M8 12 L16 12" fill="currentColor"/>
-                        <path d="M6 15 L10 13.5 M14 13.5 L18 15" stroke="white" stroke-width="0.5" fill="none"/>
+                        <path d="M4 15 Q4 10 8 8 Q12 6 16 8 Q20 10 20 15 L17 13 Q12 11 7 13 Z" fill="black"/>
                     </svg>
                 `;
             }
             
-            // Plate with utensils icon (circular design)
+            // Food menu icon - simple plate with utensils
             if (shop.hasFoodMenu) {
                 icons += `
                     <svg class="amenity-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" title="Food Menu">
-                        <circle cx="12" cy="12" r="10" fill="currentColor"/>
-                        <path d="M8 7 L8 12 M8 9.5 Q8 8 9.5 8" stroke="white" stroke-width="1" fill="none"/>
-                        <rect x="7.5" y="12" width="1" height="5" fill="white"/>
-                        <rect x="10.5" y="7" width="1" height="6" fill="white" rx="0.5"/>
-                        <rect x="10" y="13" width="2" height="4" fill="white" rx="0.3"/>
-                        <path d="M14 7 L14 11 Q14 12 15 12 L15 17" stroke="white" stroke-width="1" fill="none"/>
-                        <ellipse cx="15" cy="17.5" rx="0.8" ry="0.5" fill="white"/>
+                        <circle cx="12" cy="12" r="9" fill="black"/>
+                        <rect x="8" y="8" width="1.5" height="8" fill="white"/>
+                        <rect x="11.25" y="8" width="1.5" height="5" fill="white"/>
+                        <rect x="14.5" y="8" width="1.5" height="8" fill="white"/>
+                        <path d="M8 15.5 L9.5 15.5 L9.5 16 Q9.5 16.5 9 16.5 L8.5 16.5 Q8 16.5 8 16 Z" fill="white"/>
+                        <ellipse cx="15.25" cy="16.5" rx="1" ry="0.5" fill="white"/>
                     </svg>
                 `;
             }
@@ -1913,11 +1909,6 @@
                             <a href="${appleMapsUrl}" target="_blank" class="dir-btn" rel="noopener noreferrer">Apple</a>
                         </div>
                         ${popupAmenityIcons}
-                    </div>
-                        <div class="directions-buttons">
-                            <a href="${googleMapsUrl}" target="_blank" class="dir-btn" rel="noopener noreferrer">Google</a>
-                            <a href="${appleMapsUrl}" target="_blank" class="dir-btn" rel="noopener noreferrer">Apple</a>
-                        </div>
                     </div>
                 `, {
                     closeButton: true,
