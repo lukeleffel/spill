@@ -1899,6 +1899,12 @@
         function renderListView(searchQuery = '') {
             const listContent = document.getElementById('listContent');
             
+            // Check if data is loaded
+            if (coffeeShops.length === 0) {
+                listContent.innerHTML = '<div class="loading-message">Loading cafes from Google Sheets...</div>';
+                return;
+            }
+            
             const filteredShops = coffeeShops.filter(shop => {
                 // Apply filter mode - check for gradient marker
                 if (filterMode === 'partner' && !isPartnerCafe(shop.name)) {
