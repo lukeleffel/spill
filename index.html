@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-     <link rel="apple-touch-icon" href="icon.png">
-<link rel="icon" href="icon.png">
+     <link rel="apple-touch-icon" href="s.png">
+<link rel="icon" href="s.png">
     <link rel="manifest" href="manifest.json">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -2144,15 +2144,28 @@
                 return;
             }
             
+            let firstMatch = null;
+            
             // Filter markers based on search
             markers.forEach(({ marker, shop }) => {
                 const searchText = `${shop.name} ${shop.address} ${shop.type}`.toLowerCase();
                 if (searchText.includes(query)) {
                     marker.setOpacity(1);
+                    if (!firstMatch) {
+                        firstMatch = { marker, shop };
+                    }
                 } else {
                     marker.setOpacity(0.2);
                 }
             });
+            
+            // Center map on first matching result
+            if (firstMatch) {
+                map.setView([firstMatch.shop.lat, firstMatch.shop.lng], 15, {
+                    animate: true,
+                    duration: 0.5
+                });
+            }
         });
         
         // Close search when clicking outside
