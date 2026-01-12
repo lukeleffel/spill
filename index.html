@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+     <link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" href="icon.png">
+    <link rel="manifest" href="manifest.json">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spill Coffee Everywhere — Columbus</title>
+    <title>Spill Coffee Map - Independent Cafe Culture</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -58,6 +61,25 @@
             0% { transform: translateY(0); }
             100% { transform: translateY(10px); }
         }
+         /* Typewriter Effect */
+.typewriter {
+    overflow: hidden;
+    border-right: 2px solid var(--dark);
+    white-space: nowrap;
+    animation: typing 2.5s steps(40, end), blink-caret 0.75s step-end infinite;
+    width: 0;
+    animation-fill-mode: forwards;
+}
+
+@keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent; }
+    50% { border-color: var(--dark); }
+}
         
         .app-container {
             height: 100vh;
@@ -68,7 +90,7 @@
         header {
             background: rgba(255, 248, 231, 0.98);
             border-bottom: 4px solid var(--dark);
-            padding: 20px 32px;
+            padding: 16px 32px;
             position: relative;
             box-shadow: 0 6px 0 rgba(0, 0, 0, 0.2);
         }
@@ -89,14 +111,19 @@
         
         .logo-text h1 {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 38px;
+            font-size: 42px;
             font-weight: 400;
             letter-spacing: 0.05em;
+            line-height: 0.9;
             margin-bottom: 2px;
             background: linear-gradient(135deg, var(--retro-blue), var(--retro-pink));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+        }
+        
+        .logo-text h1 .line-two {
+            display: block;
         }
         
         .logo-text p {
@@ -109,17 +136,17 @@
         
         .header-meta {
             text-align: right;
-            font-size: 13px;
+            font-size: 11px;
             color: var(--dark);
             display: flex;
             flex-direction: column;
             align-items: flex-end;
-            gap: 8px;
+            gap: 6px;
         }
         
         .stats-row {
             display: flex;
-            gap: 24px;
+            gap: 20px;
             align-items: baseline;
         }
         
@@ -129,7 +156,7 @@
             align-items: flex-end;
             cursor: pointer;
             transition: all 0.2s;
-            padding: 8px 12px;
+            padding: 6px 10px;
             border: 2px solid transparent;
         }
         
@@ -146,7 +173,7 @@
         
         .header-meta .count {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 38px;
+            font-size: 32px;
             font-weight: 400;
             letter-spacing: 0.05em;
             background: linear-gradient(135deg, var(--retro-pink), var(--accent-orange));
@@ -155,11 +182,11 @@
             background-clip: text;
             display: block;
             line-height: 1;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
         
         .header-meta .count.network {
-            font-size: 38px;
+            font-size: 32px;
             background: var(--retro-pink);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -187,12 +214,22 @@
             transition: all 0.2s;
         }
         
+        .view-btn[data-view="join"]:hover {
+            background: var(--accent-orange);
+            color: white;
+        }
+        
         .view-btn:hover {
             transform: translate(-2px, -2px);
             box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.2);
         }
         
         .view-btn.active {
+            background: var(--retro-pink);
+            color: white;
+        }
+        
+        .view-btn[data-view="join"].active {
             background: var(--retro-pink);
             color: white;
         }
@@ -300,6 +337,13 @@
         .shop-card.active {
             background: rgba(255, 107, 157, 0.15);
             border-left: 6px solid var(--retro-pink);
+        }
+        
+        .spill-badge {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            opacity: 0.9;
         }
         
         .shop-number {
@@ -528,6 +572,108 @@
             backdrop-filter: blur(10px);
         }
         
+        #aboutView {
+            flex: 1;
+            background: rgba(255, 248, 231, 0.95);
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #aboutContent {
+            flex: 1;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        #aboutContent::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        #aboutContent::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        #aboutContent::-webkit-scrollbar-thumb {
+            background: var(--retro-pink);
+            border: 2px solid var(--dark);
+        }
+        
+        #joinView {
+            flex: 1;
+            background: rgba(255, 248, 231, 0.95);
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #joinContent {
+            flex: 1;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        #joinContent::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        #joinContent::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        #joinContent::-webkit-scrollbar-thumb {
+            background: var(--retro-pink);
+            border: 2px solid var(--dark);
+        }
+        
+        .about-section {
+            padding: 20px 24px;
+            border-bottom: 2px dashed rgba(44, 44, 44, 0.2);
+            animation: slideInRight 0.4s ease-out backwards;
+        }
+        
+        .about-section:nth-child(1) { animation-delay: 0.05s; }
+        .about-section:nth-child(2) { animation-delay: 0.1s; }
+        .about-section:nth-child(3) { animation-delay: 0.15s; }
+        .about-section:nth-child(4) { animation-delay: 0.2s; }
+        .about-section:nth-child(5) { animation-delay: 0.25s; }
+        
+        .about-section h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            background: linear-gradient(135deg, var(--retro-blue), var(--retro-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+        }
+        
+        .about-section p {
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--dark);
+            margin-bottom: 12px;
+        }
+        
+        .about-section a {
+            color: var(--retro-blue);
+            font-weight: 700;
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .about-section a:hover {
+            color: var(--retro-pink);
+            border-bottom: 2px solid var(--retro-pink);
+        }
+        
         #articlesContent::-webkit-scrollbar {
             width: 12px;
         }
@@ -596,6 +742,28 @@
             display: none;
         }
         
+        /* Hover Tooltip Styling */
+        .custom-tooltip {
+            background: rgba(255, 248, 231, 0.98);
+            border: 3px solid var(--dark);
+            border-radius: 0;
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 12px;
+            padding: 6px 12px;
+            color: var(--dark);
+            backdrop-filter: blur(10px);
+        }
+        
+        .custom-tooltip::before {
+            display: none;
+        }
+        
+        .leaflet-tooltip-top::before {
+            display: none;
+        }
+        
         .popup-content {
             padding: 4px;
         }
@@ -654,57 +822,83 @@
         }
         
         .directions-buttons {
-            display: flex;
-            gap: 8px;
+            display: inline-flex;
+            gap: 6px;
+            margin-left: 8px;
         }
         
         .dir-btn {
-            flex: 1;
-            padding: 10px;
+            display: inline-block;
+            padding: 4px 8px;
             text-align: center;
             text-decoration: none;
-            border: 3px solid var(--dark);
-            font-size: 11px;
+            border: 2px solid var(--dark);
+            font-size: 10px;
             font-weight: 700;
             letter-spacing: 0.05em;
             text-transform: uppercase;
             transition: all 0.2s;
             color: var(--dark);
             background: white;
-            box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
+            box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.15);
         }
         
         .dir-btn:hover {
             background: var(--retro-pink);
             color: white;
-            transform: translate(-2px, -2px);
-            box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.2);
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
         }
         
         .custom-marker {
-            color: white;
+            position: relative;
+            width: 36px;
+            height: 36px;
+            background: white;
             border: 3px solid var(--dark);
-            width: 40px;
-            height: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 18px;
-            font-weight: 700;
-            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
-            font-family: 'Lora', serif;
+            font-weight: 400;
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 0.05em;
+            box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3);
             transition: all 0.2s;
             cursor: pointer;
-            opacity: 0.85;
+            opacity: 0.9;
+        }
+        
+        .custom-marker::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 12px solid var(--dark);
         }
         
         .custom-marker.black {
             background: var(--black);
+            color: white;
+        }
+        
+        .custom-marker.black::after {
+            border-top-color: var(--dark);
         }
         
         .custom-marker.gradient {
             background: linear-gradient(135deg, var(--retro-pink), var(--retro-blue));
+            color: white;
+        }
+        
+        .custom-marker.gradient::after {
+            border-top-color: var(--dark);
         }
         
         .custom-marker:hover,
@@ -717,31 +911,135 @@
         
         .footer-credit {
             position: absolute;
-            bottom: 24px;
-            right: 24px;
-            background: rgba(255, 248, 231, 0.95);
-            padding: 14px 20px;
-            border: 3px solid var(--dark);
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 0.05em;
+            bottom: 20px;
+            right: 20px;
             z-index: 1000;
-            box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .footer-credit .sponsors-label {
+            font-size: 8px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--dark);
+            background: rgba(255, 248, 231, 0.95);
+            padding: 6px 10px;
+            border: 3px solid var(--dark);
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            white-space: nowrap;
+        }
+        
+        .footer-credit .sponsors-list {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        
+        .footer-credit .sponsor-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 10px;
+            background: rgba(255, 248, 231, 0.95);
+            border: 3px solid var(--dark);
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.4);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 8px;
+            font-weight: 700;
+            color: var(--dark);
+            letter-spacing: 0.05em;
             backdrop-filter: blur(10px);
         }
         
-        .footer-credit a {
-            color: var(--retro-pink);
-            text-decoration: none;
-            font-weight: 700;
-            border-bottom: 2px solid var(--retro-pink);
-        }
-        
-        .footer-credit a:hover {
+        .footer-credit .sponsor-item:hover {
             background: var(--retro-pink);
             color: white;
-            border-bottom: none;
-            padding: 2px 4px;
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.4);
+        }
+        
+        .footer-credit .sponsor-logo {
+            height: 12px;
+            width: auto;
+            object-fit: contain;
+        }
+        
+        /* Map Search Box */
+        .map-search-container {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+        
+        .map-search-toggle {
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 248, 231, 0.98);
+            border: 3px solid var(--dark);
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            backdrop-filter: blur(10px);
+        }
+        
+        .map-search-toggle:hover {
+            background: var(--retro-pink);
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.3);
+        }
+        
+        .map-search-toggle:hover svg {
+            fill: white;
+        }
+        
+        .map-search-toggle svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--dark);
+            transition: fill 0.2s;
+        }
+        
+        .map-search-input {
+            width: 0;
+            padding: 0;
+            border: 3px solid var(--dark);
+            border-left: none;
+            background: rgba(255, 248, 231, 0.98);
+            font-family: 'Space Mono', monospace;
+            font-size: 14px;
+            color: var(--dark);
+            font-weight: 700;
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+            opacity: 0;
+            backdrop-filter: blur(10px);
+        }
+        
+        .map-search-input.active {
+            width: 280px;
+            padding: 11px 16px;
+            opacity: 1;
+        }
+        
+        .map-search-input:focus {
+            outline: none;
+            background: var(--cream);
+        }
+        
+        .map-search-input::placeholder {
+            color: rgba(44, 44, 44, 0.5);
         }
         
         .hidden {
@@ -813,8 +1111,8 @@
             <div class="header-content">
                 <div class="logo">
                     <div class="logo-text">
-                        <h1>Spill Coffee Everywhere</h1>
-                        <p>Care As Culture — Independent Cafe Map</p>
+                        <h1>Spill Coffee Map<span class="line-two"></span></h1>
+                        <p class>Get Independent <br>Coffee Everywhere</p>
                     </div>
                 </div>
                 <div class="header-meta">
@@ -831,14 +1129,24 @@
                     <div class="view-toggle">
                         <button class="view-btn" data-view="list">LIST</button>
                         <button class="view-btn active" data-view="map">MAP</button>
-                        <button class="view-btn" data-view="articles">ARTICLES</button>
+                        <button class="view-btn" data-view="about">ABOUT</button>
+                        <button class="view-btn" data-view="join">JOIN</button>
                     </div>
                 </div>
             </div>
         </header>
         
         <div class="main-content">
-            <div id="map"></div>
+            <div id="map">
+                <div class="map-search-container">
+                    <div class="map-search-toggle" id="mapSearchToggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                        </svg>
+                    </div>
+                    <input type="text" class="map-search-input" id="mapSearchInput" placeholder="SEARCH CAFES...">
+                </div>
+            </div>
             
             <div id="listView" class="hidden">
                 <div class="sidebar-header" style="position: sticky; top: 0; z-index: 10;">
@@ -847,37 +1155,78 @@
                 <div id="listContent"></div>
             </div>
             
-            <div id="articlesView" class="hidden">
-                <aside class="sidebar">
-                    <div class="sidebar-header">
-                        <input type="text" class="search-box" id="articleSearchBox" placeholder="SEARCH ARTICLES...">
-                    </div>
-                    <div id="articleList"></div>
-                </aside>
-                
-                <div id="articlesContent">
-                    <div class="articles-header">
-                        <h2>Spill Magazine</h2>
-                        <p>Care As Culture — A coffee magazine about giving a sh*t</p>
-                    </div>
-                    <div class="articles-grid" id="articlesGrid">
-                        <div class="loading-message">Loading articles from Substack...</div>
-                    </div>
-                </div>
+            <div id="aboutView" class="hidden">
+                <div id="aboutContent"></div>
+            </div>
+            
+            <div id="joinView" class="hidden">
+                <div id="joinContent"></div>
             </div>
             
             <div class="footer-credit">
-                CURATED BY <a href="https://instagram.com/lukeleffel" target="_blank">@LUKELEFFEL</a>
+                <div class="sponsors-label">Supported By</div>
+                <div class="sponsors-list">
+                    <a href="https://www.notneutral.com" target="_blank" rel="noopener noreferrer" class="sponsor-item">
+                        <span>notNeutral</span>
+                    </a>
+                    <a href="https://thirdwavewater.com" target="_blank" rel="noopener noreferrer" class="sponsor-item">
+                        <span>Third Wave Water</span>
+                    </a>
+                    <!-- Add more sponsors:
+                    <a href="URL" target="_blank" rel="noopener noreferrer" class="sponsor-item">
+                        <span>Brand Name</span>
+                    </a>
+                    Or with logo:
+                    <a href="URL" target="_blank" rel="noopener noreferrer" class="sponsor-item">
+                        <img src="logo.png" alt="Brand" class="sponsor-logo">
+                        <span>Brand Name</span>
+                    </a>
+                    -->
+                </div>
             </div>
         </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        // =============================================================
+        // PARTNER CAFES - Edit this list to add/remove partner cafes
+        // Just add or remove cafe names exactly as they appear in the main list
+        // =============================================================
+        const partnerCafes = [
+            "Honey Cup Coffee",
+            "Northstar Cafe — Short North",
+            "Begin Cafe",
+            "Brioso Coffee",
+            "Boston Stoker Coffee",
+            "Blackened Coffee Co.",
+            "Bada Bean Bada Booze — Italian Village",
+            "Bada Bean Bada Booze — Harrison West",
+            "Bitty & Beau's Coffee",
+            "Bake Me Happy",
+            "Black Kahawa",
+            "Moonbird Coffee",
+            "Matari Coffee",
+            "Maudines Coffee",
+            "Mission Coffee Co.",
+            "Marib Coffee — Westerville",
+            "Two Tigers Coffee",
+            "The Lion Coffee Bar",
+            "The Roosevelt Coffeehouse",
+            "Tulip Cafe"
+        ];
+
+        // =============================================================
+        // COFFEE SHOPS LIST
+        // =============================================================
+        // To customize map pin initials for any cafe, add: initials: "XX"
+        // Otherwise pins auto-generate from first letters of first two words
+        // =============================================================
+        
         const coffeeShops = [
-            { name: "Moonbird Coffee", address: "1400 Holly Ave, Columbus, OH", lat: 39.9891, lng: -83.0207, type: "Specialty Coffee", website: null, instagram: "moonbirdcoffeeco" },
+            { name: "Moonbird Coffee", initials: "MB", address: "1400 Holly Ave, Columbus, OH", lat: 39.9891, lng: -83.0207, type: "Specialty Coffee", website: null, instagram: "moonbirdcoffeeco" },
             { name: "Two Tigers Coffee", address: "3341 N High St, Columbus, OH", lat: 40.0189, lng: -83.0136, type: "Micro Coffee Shop", website: "https://twotigerscoffee.com", instagram: "twotigerscoffee" },
-            { name: "Little Cat", address: "212 Kelton Ave, Columbus, OH", lat: 39.9531, lng: -82.9732, type: "Boba & Coffee", website: "https://www.littlecatboba.com", instagram: "littlecatboba" },
+            { name: "Little Cat", initials: "LC", address: "212 Kelton Ave, Columbus, OH", lat: 39.9531, lng: -82.9732, type: "Boba & Coffee", website: "https://www.littlecatboba.com", instagram: "littlecatboba" },
             { name: "Ravellos Coffee", address: "883.5 N 4th St, Columbus, OH", lat: 39.9800, lng: -83.0046, type: "Specialty Coffee", website: "https://www.ravellos.coffee", instagram: "ravelloscoffee" },
             { name: "Begin Cafe", address: "8 E Main St, Westerville, OH", lat: 40.1257, lng: -82.9287, type: "Cafe & Bakery", website: "https://begin-cafe.com", instagram: "begincafe" },
             { name: "Fox in the Snow — Italian Village", address: "1031 N 4th St, Columbus, OH", lat: 39.9836, lng: -83.0048, type: "Cafe & Bakery", website: "https://www.foxinthesnow.com", instagram: "foxinthesnow" },
@@ -933,28 +1282,46 @@
             { name: "Bake Me Happy", address: "59 Parsons Ave, Columbus, OH", lat: 39.9619, lng: -82.9897, type: "Gluten-Free Bakery", website: "https://www.bakemehappy.com", instagram: "bakemehappycbus" },
             { name: "Saucy Brew Works Coffee", address: "3885 W 3rd Ave, Columbus, OH", lat: 39.9837, lng: -83.0622, type: "Coffee & Brewery", website: "https://www.saucybrewworks.com", instagram: "saucybrewworks" },
             { name: "Standardized Brewing", address: "7273 Huntington Park Dr, Lewis Center, OH", lat: 40.1838, lng: -83.0134, type: "Coffee & Brewery", website: null, instagram: "standardizedbrewing" },
-            { name: "Tulip Cafe", address: "5572 Woerner Temple Rd, Dublin, OH", lat: 40.1114, lng: -83.1518, type: "Turkish Cafe", website: null, instagram: "tulipcafedublin" }
+            { name: "Tulip Cafe", address: "5572 Woerner Temple Rd, Dublin, OH", lat: 40.1114, lng: -83.1518, type: "Turkish Cafe", website: null, instagram: "tulipcafedublin" },
+            { name: "Callin' Your Bluff Coffee", address: "458 W Chapel St, Columbus, OH", lat: 39.9665, lng: -83.0053, type: "Pop-Up Coffee Cart", website: "https://callinyourbluffcoffee.com", instagram: "callinyourbluffcoffee" },
+            { name: "East African Coffee House", address: "4359 Morse Rd, Columbus, OH", lat: 40.0632, lng: -82.9209, type: "East African Coffee", website: "https://www.eastafricancoffeehouse.com", instagram: "eastafricancoffeehouse" },
+            { name: "Crimson Easton", address: "4066 Worth Ave, Columbus, OH", lat: 40.0491, lng: -82.9168, type: "Roaster & Cafe", website: "https://crimsoncup.com", instagram: "crimsoncolumbus" }
         ];
 
-        let articles = [];
         let currentView = 'map';
         let filterMode = 'all'; // 'all' or 'partner'
 
-        function getInitials(name) {
-            const words = name.replace(/—/g, ' ').split(' ');
+        // =============================================================
+        // CUSTOM INITIALS - How to customize map pin letters:
+        // =============================================================
+        // By default, pins automatically show first letter of first two words
+        // To customize any cafe's initials, add: initials: "XX"
+        // 
+        // Example:
+        // { name: "Moonbird Coffee", initials: "MB", address: "...", ... }
+        // 
+        // Leave it out for automatic generation:
+        // { name: "Two Tigers Coffee", address: "...", ... }  // Auto: "TT"
+        // =============================================================
+
+        function getInitials(shop) {
+            // If cafe has custom initials defined, use those
+            if (shop.initials) return shop.initials.toUpperCase();
+            
+            // Otherwise, auto-generate from name
+            const words = shop.name.replace(/—/g, ' ').split(' ');
             if (words.length === 1) return words[0].substring(0, 2).toUpperCase();
             return (words[0][0] + words[1][0]).toUpperCase();
         }
 
-        function usesGradientMarker(name) {
-            const firstLetter = name.charAt(0).toUpperCase();
-            return ['H', 'N', 'B', 'M', 'T'].includes(firstLetter);
+        function isPartnerCafe(cafeName) {
+            return partnerCafes.includes(cafeName);
         }
 
         document.getElementById('shopCount').textContent = coffeeShops.length;
         
-        // Calculate "Partner Cafes" count (cafes with gradient markers = H/N/B/M/T)
-        const networkCount = coffeeShops.filter(shop => usesGradientMarker(shop.name)).length;
+        // Calculate "Partner Cafes" count using the partnerCafes array
+        const networkCount = partnerCafes.length;
         document.getElementById('networkCount').textContent = networkCount;
 
         function filterCafes(mode) {
@@ -970,7 +1337,7 @@
             
             // Filter markers on map
             markers.forEach(({ marker, shop }) => {
-                const hasGradient = usesGradientMarker(shop.name);
+                const hasGradient = isPartnerCafe(shop.name);
                 
                 if (mode === 'partner') {
                     if (hasGradient) {
@@ -982,6 +1349,11 @@
                     marker.addTo(map);
                 }
             });
+            
+            // If we're on list view, re-render it
+            if (currentView === 'list') {
+                renderListView();
+            }
         }
         
         // Stat item click handlers
@@ -1013,14 +1385,15 @@
         coffeeShops.forEach((shop, index) => {
             const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(shop.address)}`;
             const appleMapsUrl = `https://maps.apple.com/?daddr=${encodeURIComponent(shop.address)}`;
-            const initials = getInitials(shop.name);
-            const useGradient = usesGradientMarker(shop.name);
+            const initials = getInitials(shop); // Pass whole shop object
+            const useGradient = isPartnerCafe(shop.name);
             const markerClass = useGradient ? 'gradient' : 'black';
             
             const customIcon = L.divIcon({
                 html: `<div class="custom-marker ${markerClass}" data-index="${index}">${initials}</div>`,
                 className: '',
-                iconSize: [40, 40]
+                iconSize: [36, 48],
+                iconAnchor: [18, 48]
             });
             
             const linkUrl = shop.website;
@@ -1040,6 +1413,12 @@
             
             const marker = L.marker([shop.lat, shop.lng], { icon: customIcon })
                 .addTo(map)
+                .bindTooltip(shop.name, {
+                    permanent: false,
+                    direction: 'top',
+                    offset: [0, -20],
+                    className: 'custom-tooltip'
+                })
                 .bindPopup(`
                     <div class="popup-content">
                         <div class="popup-number">№ ${String(index + 1).padStart(2, '0')}</div>
@@ -1054,9 +1433,13 @@
                             <a href="${appleMapsUrl}" target="_blank" class="dir-btn" rel="noopener noreferrer">Apple</a>
                         </div>
                     </div>
-                `);
+                `, {
+                    closeButton: true,
+                    autoClose: true,
+                    closeOnClick: false
+                });
             
-            // Force popup links to open in new tabs
+            // FIXED: Proper popup event handling to prevent reset
             marker.on('popupopen', () => {
                 const popup = marker.getPopup();
                 const popupElement = popup.getElement();
@@ -1071,115 +1454,22 @@
                         }
                     });
                 });
+                
+                // FIXED: Prevent close button from causing app reset
+                const closeButton = popupElement.querySelector('.leaflet-popup-close-button');
+                if (closeButton) {
+                    closeButton.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+                        marker.closePopup();
+                        return false;
+                    }, true); // Use capture phase
+                }
             });
             
             markers.push({ marker, shop, index });
         });
-
-        // Marker click handler removed since no sidebar
-
-        // Fetch RSS feed and parse articles
-        async function fetchArticles() {
-            const rssUrl = 'https://spillcoffeemagazine.substack.com/feed';
-            const corsProxy = 'https://api.allorigins.win/raw?url=';
-            
-            try {
-                const response = await fetch(corsProxy + encodeURIComponent(rssUrl));
-                const text = await response.text();
-                const parser = new DOMParser();
-                const xml = parser.parseFromString(text, 'text/xml');
-                
-                // Check for parsing errors
-                const parserError = xml.querySelector('parsererror');
-                if (parserError) {
-                    throw new Error('XML parsing error');
-                }
-                
-                const items = xml.querySelectorAll('item');
-                console.log('Found items:', items.length); // Debug log
-                
-                articles = Array.from(items).map((item, index) => {
-                    const title = item.querySelector('title')?.textContent || 'Untitled';
-                    const link = item.querySelector('link')?.textContent || '#';
-                    const pubDate = item.querySelector('pubDate')?.textContent || '';
-                    const description = item.querySelector('description')?.textContent || '';
-                    
-                    // Clean up description (remove HTML tags)
-                    const tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = description;
-                    const cleanDescription = tempDiv.textContent || tempDiv.innerText || '';
-                    const excerpt = cleanDescription.substring(0, 200) + (cleanDescription.length > 200 ? '...' : '');
-                    
-                    console.log(`Article ${index + 1}:`, title); // Debug log
-                    
-                    return {
-                        title,
-                        link,
-                        pubDate: pubDate ? new Date(pubDate) : new Date(),
-                        excerpt
-                    };
-                });
-                
-                console.log('Total articles loaded:', articles.length); // Debug log
-                renderArticles();
-            } catch (error) {
-                console.error('Error fetching RSS feed:', error);
-                document.getElementById('articlesGrid').innerHTML = `
-                    <div class="error-message">
-                        Unable to load articles. Please visit 
-                        <a href="https://spillcoffeemagazine.substack.com" target="_blank" style="color: var(--retro-pink); text-decoration: underline;">
-                            Spill Coffee Magazine
-                        </a>
-                        directly.
-                    </div>
-                `;
-            }
-        }
-
-        function formatDate(date) {
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            return date.toLocaleDateString('en-US', options);
-        }
-
-        function renderArticles(searchQuery = '') {
-            const articlesGrid = document.getElementById('articlesGrid');
-            const articleList = document.getElementById('articleList');
-            
-            const filteredArticles = searchQuery 
-                ? articles.filter(article => 
-                    article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    article.excerpt.toLowerCase().includes(searchQuery.toLowerCase())
-                  )
-                : articles;
-            
-            if (filteredArticles.length === 0) {
-                articlesGrid.innerHTML = '<div class="loading-message">No articles found matching your search.</div>';
-                articleList.innerHTML = '';
-                return;
-            }
-            
-            // Full article cards for main content area
-            articlesGrid.innerHTML = filteredArticles.map(article => `
-                <div class="article-full">
-                    <div class="article-date">${formatDate(article.pubDate)}</div>
-                    <div class="article-title">
-                        <a href="${article.link}" target="_blank">${article.title}</a>
-                    </div>
-                    <div class="article-excerpt">${article.excerpt}</div>
-                    <a href="${article.link}" target="_blank" class="article-link">Read More</a>
-                </div>
-            `).join('');
-            
-            // Compact article cards for sidebar
-            articleList.innerHTML = filteredArticles.map(article => `
-                <div class="article-card">
-                    <div class="article-date">${formatDate(article.pubDate)}</div>
-                    <div class="article-title">
-                        <a href="${article.link}" target="_blank">${article.title}</a>
-                    </div>
-                </div>
-            `).join('');
-        }
 
         // View toggle functionality
         document.querySelectorAll('.view-btn').forEach(btn => {
@@ -1191,15 +1481,16 @@
                 btn.classList.add('active');
                 
                 const mapEl = document.getElementById('map');
-                const articlesViewEl = document.getElementById('articlesView');
                 const listViewEl = document.getElementById('listView');
+                const aboutViewEl = document.getElementById('aboutView');
+                const joinViewEl = document.getElementById('joinView');
                 const listSearchBox = document.getElementById('listSearchBox');
-                const articleSearchBox = document.getElementById('articleSearchBox');
                 
                 // Hide everything first
                 mapEl.classList.add('hidden');
-                articlesViewEl.classList.add('hidden');
                 listViewEl.classList.add('hidden');
+                aboutViewEl.classList.add('hidden');
+                joinViewEl.classList.add('hidden');
                 
                 if (view === 'map') {
                     mapEl.classList.remove('hidden');
@@ -1208,13 +1499,12 @@
                     listViewEl.classList.remove('hidden');
                     listSearchBox.placeholder = 'SEARCH CAFES...';
                     renderListView();
-                } else if (view === 'articles') {
-                    articlesViewEl.classList.remove('hidden');
-                    articleSearchBox.placeholder = 'SEARCH ARTICLES...';
-                    
-                    if (articles.length === 0) {
-                        fetchArticles();
-                    }
+                } else if (view === 'about') {
+                    aboutViewEl.classList.remove('hidden');
+                    renderAboutView();
+                } else if (view === 'join') {
+                    joinViewEl.classList.remove('hidden');
+                    renderJoinView();
                 }
             });
         });
@@ -1225,7 +1515,7 @@
             
             const filteredShops = coffeeShops.filter(shop => {
                 // Apply filter mode - check for gradient marker
-                if (filterMode === 'partner' && !usesGradientMarker(shop.name)) {
+                if (filterMode === 'partner' && !isPartnerCafe(shop.name)) {
                     return false;
                 }
                 
@@ -1261,15 +1551,34 @@
                     </a>
                 `;
                 
+                const spillBadge = isPartnerCafe(shop.name) ? 
+                    `<div class="spill-badge">
+                        <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="spillGradient${actualIndex}" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#4A90E2;stop-opacity:1" />
+                                    <stop offset="50%" style="stop-color:#9B59B6;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#FF6B9D;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <circle cx="12" cy="12" r="11" fill="url(#spillGradient${actualIndex})" stroke="#2C2C2C" stroke-width="1"/>
+                            <text x="12" y="16" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">S</text>
+                        </svg>
+                    </div>` : '';
+                
                 return `
                     <div class="shop-card">
-                        <div class="shop-number">№ ${String(actualIndex + 1).padStart(2, '0')}</div>
                         <div class="shop-name">${shop.name}</div>
                         <div class="shop-address">${shop.address}</div>
                         <div class="shop-meta">
                             ${typeLink}
                             ${instagramIcon}
+                            <div class="directions-buttons">
+                                <a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer" class="dir-btn">Google</a>
+                                <a href="${appleMapsUrl}" target="_blank" rel="noopener noreferrer" class="dir-btn">Apple</a>
+                            </div>
                         </div>
+                        ${spillBadge}
                     </div>
                 `;
             }).join('');
@@ -1296,12 +1605,178 @@
             renderListView(query);
         });
         
-        // Search functionality for articles
-        const articleSearchBox = document.getElementById('articleSearchBox');
-        articleSearchBox.addEventListener('input', (e) => {
-            const query = e.target.value;
-            renderArticles(query);
+        // Render about view
+        function renderAboutView() {
+            const aboutContent = document.getElementById('aboutContent');
+            
+            aboutContent.innerHTML = `
+                <div class="about-section">
+                    <h2>Our Mission</h2>
+                    <p>Spill Coffee Map exists to help you discover independent coffee shops that prioritize genuine human connection over transactional relationships. We believe coffee culture is about more than just great drinks — it's about the spaces and people that make communities thrive.</p>
+                </div>
+                
+                <div class="about-section">
+                    <h2>What We Look For</h2>
+                    <p>Every cafe on this map has been hand-selected based on our "Culture of Care" philosophy. We feature shops that:</p>
+                    <p>• Create intentional spaces for community connection<br>
+                    • Support independent roasters and sustainable practices<br>
+                    • Employ people who are passionate about craft and hospitality<br>
+                    • Build relationships, not just transactions</p>
+                </div>
+                
+                <div class="about-section">
+                    <h2>Partner Cafes</h2>
+                    <p>Cafes marked with the 
+                        <span style="display: inline-flex; align-items: center; gap: 4px;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;">
+                                <defs>
+                                    <linearGradient id="spillGradientAbout" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#4A90E2;stop-opacity:1" />
+                                        <stop offset="50%" style="stop-color:#9B59B6;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#FF6B9D;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                <circle cx="12" cy="12" r="11" fill="url(#spillGradientAbout)" stroke="#2C2C2C" stroke-width="1"/>
+                                <text x="12" y="16" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">S</text>
+                            </svg>
+                            <strong>Spill badge</strong>
+                        </span>
+                    are official Spill Coffee Map partners. These shops have worked directly with us to share their story and support the independent coffee community.</p>
+                </div>
+                
+                <div class="about-section">
+                    <h2>About Spill</h2>
+                    <p>Spill is a coffee culture media brand documenting the cafes, roasters, and people building meaningful community through coffee. Founded by photographer and former cafe owner <a href="https://instagram.com/lukeleffel" target="_blank" rel="noopener noreferrer">Luke Leffel</a>, we're creating a national network of independent coffee spaces worth visiting.</p>
+                    <p>Follow our work at <a href="https://instagram.com/spillcoffeemag" target="_blank" rel="noopener noreferrer">@spillcoffeemag</a> or visit <a href="https://spillcoffeemag.com" target="_blank" rel="noopener noreferrer">spillcoffeemag.com</a></p>
+                </div>
+                
+                <div class="about-section">
+                    <h2>Suggest a Cafe</h2>
+                    <p>Know an independent coffee shop that embodies the Culture of Care? We're always looking to expand our map. <a href="https://forms.gle/your-form-id" target="_blank" rel="noopener noreferrer">Submit a recommendation</a> and help us discover more great coffee.</p>
+                </div>
+                
+                <div class="about-section">
+                    <h2>Partner With Us</h2>
+                    <p>Are you a coffee shop owner, roaster, or brand aligned with independent coffee culture? We'd love to hear from you. Email <a href="mailto:luke@spillcoffeemag.com">luke@spillcoffeemag.com</a> to discuss partnership opportunities.</p>
+                </div>
+            `;
+        }
+        
+        // Render join view
+        function renderJoinView() {
+            const joinContent = document.getElementById('joinContent');
+            
+            joinContent.innerHTML = `
+                <div class="about-section">
+                    <h2>Get Your Spill Keychain</h2>
+                    <p>Show your support for independent coffee culture with the official Spill Coffee Map keychain. Proceeds help us continue documenting and connecting coffee communities across the country.</p>
+                    <p style="margin-top: 20px;">
+                        <a href="https://your-shop-link.com/keychain" target="_blank" rel="noopener noreferrer" class="article-link" style="display: inline-block; padding: 12px 24px; font-size: 12px;">
+                            SHOP KEYCHAINS →
+                        </a>
+                    </p>
+                </div>
+                
+                <div class="about-section">
+                    <h2>Become a Partner Cafe</h2>
+                    <p>Join the growing network of independent cafes featured on Spill Coffee Map. Partner cafes receive:</p>
+                    <p>
+                    • Featured placement with the 
+                        <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin: 0 2px;">
+                            <defs>
+                                <linearGradient id="spillGradientJoin1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#4A90E2;stop-opacity:1" />
+                                    <stop offset="50%" style="stop-color:#9B59B6;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#FF6B9D;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <circle cx="12" cy="12" r="11" fill="url(#spillGradientJoin1)" stroke="#2C2C2C" stroke-width="1"/>
+                            <text x="12" y="16" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">S</text>
+                        </svg>
+                    Spill badge on the map<br>
+                    • Professional photography documentation of your space<br>
+                    • Feature coverage in Spill Coffee Magazine<br>
+                    • Access to our network of coffee enthusiasts nationwide<br>
+                    • Co-marketing opportunities and content collaboration
+                    </p>
+                    <p style="margin-top: 20px;">
+                        <a href="https://forms.gle/your-partner-form-id" target="_blank" rel="noopener noreferrer" class="article-link" style="display: inline-block; padding: 12px 24px; font-size: 12px;">
+                            APPLY TO PARTNER →
+                        </a>
+                    </p>
+                </div>
+                
+                <div class="about-section">
+                    <h2>Partnership Investment</h2>
+                    <p>Our partnership model is designed to be accessible for independent cafes while supporting our mission of documenting coffee culture nationwide.</p>
+                    <p><strong>Annual Partnership:</strong> $500/year includes badge placement, photography session, and feature story in Spill Coffee Magazine.</p>
+                    <p><strong>Local Sponsorship:</strong> Custom packages available for roasters, equipment brands, and coffee-aligned businesses starting at $1,000.</p>
+                    <p style="margin-top: 16px; font-size: 13px; opacity: 0.8;">Questions? Email <a href="mailto:luke@spillcoffeemag.com">luke@spillcoffeemag.com</a></p>
+                </div>
+                
+                <div class="about-section">
+                    <h2>Why Partner With Spill?</h2>
+                    <p>We're not another directory service. Spill is a media brand built by someone who understands independent coffee from the inside — as a photographer, former cafe owner, and longtime industry participant.</p>
+                    <p>Every partner cafe is personally vetted and photographed. Your story is told with care, not just listed in a database. You're joining a curated community of cafes that share your values around quality, craft, and connection.</p>
+                </div>
+            `;
+        }
+        
+        // Map search functionality
+        const mapSearchToggle = document.getElementById('mapSearchToggle');
+        const mapSearchInput = document.getElementById('mapSearchInput');
+        
+        mapSearchToggle.addEventListener('click', () => {
+            mapSearchInput.classList.toggle('active');
+            if (mapSearchInput.classList.contains('active')) {
+                mapSearchInput.focus();
+            } else {
+                mapSearchInput.value = '';
+                // Reset all markers to normal state
+                markers.forEach(({ marker }) => {
+                    marker.setOpacity(0.9);
+                });
+            }
         });
+        
+        mapSearchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            
+            if (!query) {
+                // Reset all markers
+                markers.forEach(({ marker }) => {
+                    marker.setOpacity(0.9);
+                });
+                return;
+            }
+            
+            // Filter markers based on search
+            markers.forEach(({ marker, shop }) => {
+                const searchText = `${shop.name} ${shop.address} ${shop.type}`.toLowerCase();
+                if (searchText.includes(query)) {
+                    marker.setOpacity(1);
+                } else {
+                    marker.setOpacity(0.2);
+                }
+            });
+        });
+        
+        // Close search when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.map-search-container')) {
+                mapSearchInput.classList.remove('active');
+                mapSearchInput.value = '';
+                markers.forEach(({ marker }) => {
+                    marker.setOpacity(0.9);
+                });
+            }
+        });
+        
     </script>
+        <script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js");
+  }
+</script>
 </body>
 </html>
