@@ -381,16 +381,19 @@
         }
         
         .cafe-count {
-            font-size: 13px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 24px;
             font-weight: 400;
-            opacity: 0.6;
-            margin-left: 8px;
+            letter-spacing: 0.05em;
+            color: var(--black);
+            margin-left: auto;
         }
         
         .expand-icon {
             font-size: 12px;
             transition: transform 0.2s;
             color: var(--retro-pink);
+            display: none;
         }
         
         .city-cafes {
@@ -1639,8 +1642,7 @@
                         <div class="city-header collapsible" data-city-id="${cityId}">
                             <h4>
                                 ${city}
-                                <span class="cafe-count">(${cafes.length})</span>
-                                <span class="expand-icon">▼</span>
+                                <span class="cafe-count">${cafes.length}</span>
                             </h4>
                         </div>
                         <div class="city-cafes" id="${cityId}" style="display: none;">
@@ -1710,15 +1712,12 @@
                         e.stopPropagation();
                         const cityId = header.dataset.cityId;
                         const cafesContainer = document.getElementById(cityId);
-                        const icon = header.querySelector('.expand-icon');
                         
                         if (cafesContainer.style.display === 'none') {
                             cafesContainer.style.display = 'block';
-                            icon.textContent = '▲';
                             header.classList.add('expanded');
                         } else {
                             cafesContainer.style.display = 'none';
-                            icon.textContent = '▼';
                             header.classList.remove('expanded');
                         }
                     });
