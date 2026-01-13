@@ -334,19 +334,24 @@
             cursor: pointer;
             user-select: none;
             transition: all 0.2s;
+            background: white;
+            border-bottom: 4px solid var(--dark);
+            box-shadow: 0 3px 0 rgba(0, 0, 0, 0.1);
         }
         
         .state-header:hover {
-            background: rgba(255, 248, 231, 1);
+            background: rgba(255, 255, 255, 0.95);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15);
         }
         
         .state-header.expanded {
-            background: rgba(255, 248, 231, 1);
+            background: rgba(255, 255, 255, 0.98);
         }
         
         .state-header h3 {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 400;
             letter-spacing: 0.08em;
             margin: 0;
@@ -371,11 +376,12 @@
         
         .city-header {
             padding: 14px 24px;
-            background: linear-gradient(135deg, rgba(74, 144, 226, 0.08), rgba(155, 89, 182, 0.08), rgba(255, 107, 157, 0.08));
-            border-bottom: 2px solid rgba(44, 44, 44, 0.15);
+            background: rgba(255, 248, 231, 0.85);
+            border-bottom: 2px solid rgba(44, 44, 44, 0.2);
             cursor: pointer;
             transition: all 0.2s;
             user-select: none;
+            border-left: 4px solid transparent;
         }
         
         .city-header.collapsible {
@@ -383,41 +389,32 @@
         }
         
         .city-header:hover {
-            background: linear-gradient(135deg, rgba(74, 144, 226, 0.15), rgba(155, 89, 182, 0.15), rgba(255, 107, 157, 0.15));
-            border-bottom: 2px solid var(--retro-pink);
+            background: rgba(255, 248, 231, 0.95);
+            border-left: 4px solid var(--retro-pink);
         }
         
         .city-header.expanded {
-            background: linear-gradient(135deg, rgba(74, 144, 226, 0.12), rgba(155, 89, 182, 0.12), rgba(255, 107, 157, 0.12));
-            border-bottom: 2px solid var(--retro-pink);
+            background: rgba(255, 248, 231, 1);
+            border-left: 4px solid var(--retro-blue);
         }
         
         .city-header h4 {
-            font-family: 'Lora', serif;
-            font-size: 18px;
-            font-weight: 700;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 24px;
+            font-weight: 400;
             margin: 0;
             color: var(--dark);
-            letter-spacing: 0.02em;
+            letter-spacing: 0.05em;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
         
-        .cafe-count {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 24px;
-            font-weight: 400;
-            letter-spacing: 0.05em;
-            color: var(--black);
-            margin-left: auto;
-        }
-        
         .expand-icon {
-            font-size: 12px;
+            font-size: 16px;
             transition: transform 0.2s;
             color: var(--retro-pink);
-            display: none;
+            font-weight: 400;
         }
         
         .city-cafes {
@@ -1134,7 +1131,7 @@
             <div class="header-content">
                 <div class="logo">
                     <div class="logo-title">
-                        <h1>Spill Coffee Map</h1>
+                        <h1>Coffee Map</h1>
                     </div>
                     <div class="logo-tagline">
                         <p class="typewriter">Get Independent Coffee Everywhere</p>
@@ -1652,13 +1649,28 @@
             
             Object.keys(stateGroups).sort().forEach(state => {
                 const stateId = `state-${state}`.replace(/\s+/g, '-');
-                const totalCafes = Object.values(stateGroups[state]).reduce((sum, cafes) => sum + cafes.length, 0);
+                
+                // Convert state abbreviation to full name
+                const stateNames = {
+                    'OH': 'Ohio',
+                    'CA': 'California',
+                    'NY': 'New York',
+                    'TX': 'Texas',
+                    'FL': 'Florida',
+                    'IL': 'Illinois',
+                    'PA': 'Pennsylvania',
+                    'MI': 'Michigan',
+                    'WA': 'Washington',
+                    'OR': 'Oregon'
+                    // Add more states as needed
+                };
+                const fullStateName = stateNames[state] || state;
                 
                 html += `
                     <div class="state-header collapsible" data-state-id="${stateId}">
                         <h3>
-                            ${state}
-                            <span class="cafe-count state-count">(${totalCafes})</span>
+                            ${fullStateName}
+                            <span class="expand-icon">►</span>
                         </h3>
                     </div>
                     <div class="state-cities" id="${stateId}" style="display: none;">
@@ -1673,7 +1685,7 @@
                         <div class="city-header collapsible" data-city-id="${cityId}" data-parent-state="${stateId}">
                             <h4>
                                 ${city}
-                                <span class="cafe-count">(${cafes.length})</span>
+                                <span class="expand-icon">►</span>
                             </h4>
                         </div>
                         <div class="city-cafes" id="${cityId}" style="display: none;">
@@ -1746,6 +1758,7 @@
                         e.stopPropagation();
                         const stateId = header.dataset.stateId;
                         const stateContainer = document.getElementById(stateId);
+                        const icon = header.querySelector('.expand-icon');
                         
                         // Check if currently expanded
                         const isExpanded = stateContainer.style.display === 'block';
@@ -1754,6 +1767,9 @@
                         document.querySelectorAll('.state-cities').forEach(container => {
                             container.style.display = 'none';
                         });
+                        document.querySelectorAll('.state-header.collapsible .expand-icon').forEach(i => {
+                            i.textContent = '►';
+                        });
                         document.querySelectorAll('.state-header.collapsible').forEach(h => {
                             h.classList.remove('expanded');
                         });
@@ -1761,6 +1777,7 @@
                         // Toggle current state (if it was already open, keep it closed)
                         if (!isExpanded) {
                             stateContainer.style.display = 'block';
+                            icon.textContent = '▼';
                             header.classList.add('expanded');
                         }
                     });
@@ -1773,6 +1790,7 @@
                         const cityId = header.dataset.cityId;
                         const parentStateId = header.dataset.parentState;
                         const cafesContainer = document.getElementById(cityId);
+                        const icon = header.querySelector('.expand-icon');
                         
                         // Check if currently expanded
                         const isExpanded = cafesContainer.style.display === 'block';
@@ -1783,6 +1801,9 @@
                             parentState.querySelectorAll('.city-cafes').forEach(container => {
                                 container.style.display = 'none';
                             });
+                            parentState.querySelectorAll('.city-header.collapsible .expand-icon').forEach(i => {
+                                i.textContent = '►';
+                            });
                             parentState.querySelectorAll('.city-header.collapsible').forEach(h => {
                                 h.classList.remove('expanded');
                             });
@@ -1791,6 +1812,7 @@
                         // Toggle current city (if it was already open, keep it closed)
                         if (!isExpanded) {
                             cafesContainer.style.display = 'block';
+                            icon.textContent = '▼';
                             header.classList.add('expanded');
                         }
                     });
