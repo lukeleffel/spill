@@ -331,6 +331,17 @@
         .state-header {
             top: 0;
             z-index: 6;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s;
+        }
+        
+        .state-header:hover {
+            background: rgba(255, 248, 231, 1);
+        }
+        
+        .state-header.expanded {
+            background: rgba(255, 248, 231, 1);
         }
         
         .state-header h3 {
@@ -343,6 +354,19 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .state-count {
+            font-size: 18px;
+            opacity: 0.7;
+            margin-left: 12px;
+        }
+        
+        .state-cities {
+            background: rgba(255, 248, 231, 0.5);
         }
         
         .city-header {
@@ -1627,10 +1651,18 @@
             let html = '';
             
             Object.keys(stateGroups).sort().forEach(state => {
+                const stateId = `state-${state}`.replace(/\s+/g, '-');
+                const totalCafes = Object.values(stateGroups[state]).reduce((sum, cafes) => sum + cafes.length, 0);
+                
                 html += `
-                    <div class="section-header state-header">
-                        <h3>${state}</h3>
+                    <div class="state-header collapsible" data-state-id="${stateId}">
+                        <h3>
+                            ${state}
+                            <span class="cafe-count state-count">(${totalCafes})</span>
+                            <span class="expand-icon">▼</span>
+                        </h3>
                     </div>
+                    <div class="state-cities" id="${stateId}" style="display: none;">
                 `;
                 
                 const cities = stateGroups[state];
@@ -1639,10 +1671,11 @@
                     const cityId = `city-${state}-${city}`.replace(/\s+/g, '-');
                     
                     html += `
-                        <div class="city-header collapsible" data-city-id="${cityId}">
+                        <div class="city-header collapsible" data-city-id="${cityId}" data-parent-state="${stateId}">
                             <h4>
                                 ${city}
-                                <span class="cafe-count">${cafes.length}</span>
+                                <span class="cafe-count">(${cafes.length})</span>
+                                <span class="expand-icon">▼</span>
                             </h4>
                         </div>
                         <div class="city-cafes" id="${cityId}" style="display: none;">
@@ -1701,24 +1734,76 @@
                     
                     html += `</div>`; // Close city-cafes
                 });
+                
+                html += `</div>`; // Close state-cities
             });
             
             listContent.innerHTML = html;
             
-            // Add click handlers for collapsible city headers
+            // Add click handlers for collapsible headers
             setTimeout(() => {
+                // State header click handlers
+                document.querySelectorAll('.state-header.collapsible').forEach(header => {
+                    header.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const stateId = header.dataset.stateId;
+                        const stateContainer = document.getElementById(stateId);
+                        const icon = header.querySelector('.expand-icon');
+                        
+                        // Check if currently expanded
+                        const isExpanded = stateContainer.style.display === 'block';
+                        
+                        // Close all other states
+                        document.querySelectorAll('.state-cities').forEach(container => {
+                            container.style.display = 'none';
+                        });
+                        document.querySelectorAll('.state-header.collapsible .expand-icon').forEach(i => {
+                            i.textContent = '▼';
+                        });
+                        document.querySelectorAll('.state-header.collapsible').forEach(h => {
+                            h.classList.remove('expanded');
+                        });
+                        
+                        // Toggle current state (if it was already open, keep it closed)
+                        if (!isExpanded) {
+                            stateContainer.style.display = 'block';
+                            icon.textContent = '▲';
+                            header.classList.add('expanded');
+                        }
+                    });
+                });
+                
+                // City header click handlers
                 document.querySelectorAll('.city-header.collapsible').forEach(header => {
                     header.addEventListener('click', (e) => {
                         e.stopPropagation();
                         const cityId = header.dataset.cityId;
+                        const parentStateId = header.dataset.parentState;
                         const cafesContainer = document.getElementById(cityId);
+                        const icon = header.querySelector('.expand-icon');
                         
-                        if (cafesContainer.style.display === 'none') {
+                        // Check if currently expanded
+                        const isExpanded = cafesContainer.style.display === 'block';
+                        
+                        // Close all cities within the same state
+                        const parentState = document.getElementById(parentStateId);
+                        if (parentState) {
+                            parentState.querySelectorAll('.city-cafes').forEach(container => {
+                                container.style.display = 'none';
+                            });
+                            parentState.querySelectorAll('.city-header.collapsible .expand-icon').forEach(i => {
+                                i.textContent = '▼';
+                            });
+                            parentState.querySelectorAll('.city-header.collapsible').forEach(h => {
+                                h.classList.remove('expanded');
+                            });
+                        }
+                        
+                        // Toggle current city (if it was already open, keep it closed)
+                        if (!isExpanded) {
                             cafesContainer.style.display = 'block';
+                            icon.textContent = '▲';
                             header.classList.add('expanded');
-                        } else {
-                            cafesContainer.style.display = 'none';
-                            header.classList.remove('expanded');
                         }
                     });
                 });
