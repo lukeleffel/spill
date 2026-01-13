@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-     <link rel="apple-touch-icon" href="s.png">
-<link rel="icon" href="s.png">
+    <link rel="apple-touch-icon" href="s.png">
+    <link rel="icon" href="s.png">
     <link rel="manifest" href="manifest.json">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -62,32 +62,25 @@
             0% { transform: translateY(0); }
             100% { transform: translateY(10px); }
         }
-/* Typewriter Effect */
-.typewriter {
-    overflow: hidden;
-    border-right: 2px solid var(--dark);
-    white-space: nowrap;
-    animation: typing-repeat 10s steps(40, end) infinite, blink-caret 0.75s step-end infinite;
-    width: 0;
-}
 
-@keyframes typing-repeat {
-    0% { width: 0; }
-    25% { width: 100%; }
-    100% { width: 100%; }
-}
+        .typewriter {
+            overflow: hidden;
+            border-right: 2px solid var(--dark);
+            white-space: nowrap;
+            animation: typing-repeat 10s steps(40, end) infinite, blink-caret 0.75s step-end infinite;
+            width: 0;
+        }
 
-@keyframes blink-caret {
-    from, to { border-color: transparent; }
-    50% { border-color: var(--dark); }
-}
+        @keyframes typing-repeat {
+            0% { width: 0; }
+            25% { width: 100%; }
+            100% { width: 100%; }
+        }
 
-@keyframes typewriter-loop {
-    0% { width: 0; }
-    25% { width: 100%; }
-    75% { width: 100%; }
-    100% { width: 0; }
-}
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: var(--dark); }
+        }
         
         .app-container {
             height: 100vh;
@@ -219,7 +212,6 @@
             background-clip: text;
         }
         
-        /* View Toggle */
         .view-toggle {
             display: flex;
             gap: 8px;
@@ -250,11 +242,6 @@
             color: white;
         }
         
-        .view-btn[data-view="join"].active {
-            background: var(--retro-pink);
-            color: white;
-        }
-        
         .main-content {
             flex: 1;
             display: flex;
@@ -267,7 +254,6 @@
             position: relative;
         }
         
-        /* Sidebar only appears in articles view now */
         .sidebar {
             width: 400px;
             background: rgba(255, 248, 231, 0.95);
@@ -324,7 +310,6 @@
             color: rgba(44, 44, 44, 0.5);
         }
         
-        /* Shop Cards */
         .shop-card {
             padding: 20px 24px;
             border-bottom: 2px dashed rgba(44, 44, 44, 0.2);
@@ -365,15 +350,6 @@
             bottom: 12px;
             right: 12px;
             opacity: 0.9;
-        }
-        
-        .shop-number {
-            font-family: 'Lora', serif;
-            font-size: 14px;
-            color: var(--retro-blue);
-            margin-bottom: 6px;
-            font-weight: 700;
-            text-shadow: 2px 2px 0 rgba(255, 107, 157, 0.3);
         }
         
         .shop-name {
@@ -478,91 +454,6 @@
             fill: white;
         }
         
-        /* Article Cards */
-        .article-card {
-            padding: 20px 24px;
-            border-bottom: 2px dashed rgba(44, 44, 44, 0.2);
-            transition: all 0.2s;
-            position: relative;
-            background: transparent;
-        }
-        
-        .article-card::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 6px;
-            height: 100%;
-            background: linear-gradient(180deg, var(--retro-pink), var(--retro-blue));
-            transform: scaleY(0);
-            transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-        
-        .article-card:hover {
-            background: rgba(255, 255, 255, 0.6);
-        }
-        
-        .article-card:hover::before {
-            transform: scaleY(1);
-        }
-        
-        .article-date {
-            font-size: 12px;
-            color: var(--retro-blue);
-            margin-bottom: 8px;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-        }
-        
-        .article-title {
-            font-family: 'Lora', serif;
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--dark);
-            margin-bottom: 10px;
-            line-height: 1.3;
-        }
-        
-        .article-title a {
-            color: var(--dark);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-        
-        .article-title a:hover {
-            color: var(--retro-pink);
-        }
-        
-        .article-excerpt {
-            font-size: 13px;
-            color: var(--dark);
-            line-height: 1.6;
-            opacity: 0.8;
-            margin-bottom: 12px;
-        }
-        
-        .article-link {
-            display: inline-block;
-            font-size: 11px;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            padding: 8px 14px;
-            background: var(--retro-blue);
-            color: white;
-            font-weight: 700;
-            box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
-            border: 2px solid var(--dark);
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-        
-        .article-link:hover {
-            background: var(--retro-pink);
-            transform: translate(-2px, -2px);
-            box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.2);
-        }
-        
         .loading-message {
             padding: 40px 24px;
             text-align: center;
@@ -577,25 +468,6 @@
             font-size: 14px;
             color: var(--retro-pink);
             font-weight: 700;
-        }
-        
-        #map {
-            flex: 1;
-            position: relative;
-        }
-        
-        #articlesView {
-            flex: 1;
-            display: flex;
-            overflow: hidden;
-        }
-        
-        #articlesContent {
-            flex: 1;
-            background: rgba(255, 248, 231, 0.95);
-            overflow-y: auto;
-            padding: 40px;
-            backdrop-filter: blur(10px);
         }
         
         #listView {
@@ -718,61 +590,6 @@
             border-bottom: 2px solid var(--retro-pink);
         }
         
-        #articlesContent::-webkit-scrollbar {
-            width: 12px;
-        }
-        
-        #articlesContent::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.3);
-        }
-        
-        #articlesContent::-webkit-scrollbar-thumb {
-            background: var(--retro-pink);
-            border: 2px solid var(--dark);
-        }
-        
-        .articles-header {
-            max-width: 800px;
-            margin: 0 auto 40px;
-            text-align: center;
-        }
-        
-        .articles-header h2 {
-            font-family: 'Lora', serif;
-            font-size: 48px;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--retro-blue), var(--retro-pink));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 12px;
-        }
-        
-        .articles-header p {
-            font-size: 14px;
-            color: var(--dark);
-            opacity: 0.7;
-        }
-        
-        .articles-grid {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .article-full {
-            background: white;
-            padding: 32px;
-            margin-bottom: 24px;
-            border: 3px solid var(--dark);
-            box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.2);
-            transition: all 0.2s;
-        }
-        
-        .article-full:hover {
-            transform: translate(-3px, -3px);
-            box-shadow: 9px 9px 0 rgba(0, 0, 0, 0.2);
-        }
-        
         .leaflet-popup-content-wrapper {
             background: rgba(255, 248, 231, 0.98);
             border: 4px solid var(--dark);
@@ -786,7 +603,6 @@
             display: none;
         }
         
-        /* Hover Tooltip Styling */
         .custom-tooltip {
             background: rgba(255, 248, 231, 0.98);
             border: 3px solid var(--dark);
@@ -810,15 +626,6 @@
         
         .popup-content {
             padding: 4px;
-        }
-        
-        .popup-number {
-            font-family: 'Lora', serif;
-            font-size: 13px;
-            color: var(--retro-blue);
-            margin-bottom: 4px;
-            font-weight: 700;
-            text-shadow: 1px 1px 0 rgba(255, 107, 157, 0.3);
         }
         
         .popup-title {
@@ -1019,7 +826,6 @@
             object-fit: contain;
         }
         
-        /* Map Search Box */
         .map-search-container {
             position: absolute;
             top: 20px;
@@ -1189,11 +995,7 @@
                 padding: 4px 8px;
             }
             
-            .articles-header h2 {
-                font-size: 32px;
-            }
-            
-            #articlesContent, #aboutContent, #joinContent {
+            #aboutContent, #joinContent {
                 padding: 24px 20px;
             }
         }
@@ -1209,16 +1011,16 @@
             }
         }
         
-        .shop-card, .article-card {
+        .shop-card {
             animation: slideInRight 0.4s ease-out backwards;
         }
         
-        .shop-card:nth-child(1), .article-card:nth-child(1) { animation-delay: 0.05s; }
-        .shop-card:nth-child(2), .article-card:nth-child(2) { animation-delay: 0.1s; }
-        .shop-card:nth-child(3), .article-card:nth-child(3) { animation-delay: 0.15s; }
-        .shop-card:nth-child(4), .article-card:nth-child(4) { animation-delay: 0.2s; }
-        .shop-card:nth-child(5), .article-card:nth-child(5) { animation-delay: 0.25s; }
-        .shop-card:nth-child(6), .article-card:nth-child(6) { animation-delay: 0.3s; }
+        .shop-card:nth-child(1) { animation-delay: 0.05s; }
+        .shop-card:nth-child(2) { animation-delay: 0.1s; }
+        .shop-card:nth-child(3) { animation-delay: 0.15s; }
+        .shop-card:nth-child(4) { animation-delay: 0.2s; }
+        .shop-card:nth-child(5) { animation-delay: 0.25s; }
+        .shop-card:nth-child(6) { animation-delay: 0.3s; }
     </style>
 </head>
 <body>
@@ -1290,16 +1092,6 @@
                     <a href="https://thirdwavewater.com" target="_blank" rel="noopener noreferrer" class="sponsor-item">
                         <span>Third Wave Water</span>
                     </a>
-                    <!-- Add more sponsors:
-                    <a href="URL" target="_blank" rel="noopener noreferrer" class="sponsor-item">
-                        <span>Brand Name</span>
-                    </a>
-                    Or with logo:
-                    <a href="URL" target="_blank" rel="noopener noreferrer" class="sponsor-item">
-                        <img src="logo.png" alt="Brand" class="sponsor-logo">
-                        <span>Brand Name</span>
-                    </a>
-                    -->
                 </div>
             </div>
         </div>
@@ -1308,322 +1100,140 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         // =============================================================
-        // GOOGLE SHEETS URL - PASTE YOUR PUBLISHED CSV URL HERE
+        // CSV IMPORT CONFIGURATION
         // =============================================================
-        // 1. Go to your Google Sheet
-        // 2. File → Share → Publish to web
-        // 3. Select "Entire Document" and "Comma-separated values (.csv)"
-        // 4. Click Publish
-        // 5. Copy the URL (should end with /pub?output=csv)
-        // 6. Paste it between the quotes below:
-        
-        const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSmSV7NPuWEwAOauhSt_yhZ_xccnyX5Sux1Xighi_jwZhrSshxVq9shACmv0p8etUB6V9tQ_z4EKiMT/pub?output=csv';
-        
-        // =============================================================
+        // Using the published CSV URL - should work in browser even if robots.txt blocks server fetches
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSmSV7NPuWEwAOauhSt_yhZ_xccnyX5Sux1Xighi_jwZhrSshxVq9shACmv0p8etUB6V9tQ_z4EKiMT/pub?output=csv'
         
         let coffeeShops = [];
-        let partnerCafes = [];
-        let cafeHours = {};
-        
-        // Parse CSV from Google Sheets
+        let currentView = 'map';
+        let filterMode = 'all';
+        let markers = [];
+        let map;
+
+        // =============================================================
+        // CSV PARSING FUNCTIONS
+        // =============================================================
         function parseCSV(csv) {
             const lines = csv.split('\n');
-            const headers = lines[0].split(',').map(h => h.trim());
-            const shops = [];
-            const partners = [];
-            const hours = {};
+            const headers = lines[0].split(',');
+            const data = [];
             
             for (let i = 1; i < lines.length; i++) {
                 if (!lines[i].trim()) continue;
                 
-                const values = lines[i].split(',').map(v => v.trim());
-                const shop = {};
+                const values = lines[i].split(',');
+                const obj = {};
                 
                 headers.forEach((header, index) => {
-                    shop[header] = values[index] || '';
+                    obj[header.trim()] = values[index] ? values[index].trim() : '';
                 });
                 
-                // Build cafe object
-                const cafe = {
-                    name: shop.name,
-                    address: shop.address,
-                    lat: parseFloat(shop.lat),
-                    lng: parseFloat(shop.lng),
-                    type: shop.type,
-                    website: shop.website || null,
-                    instagram: shop.instagram
+                data.push(obj);
+            }
+            
+            return data;
+        }
+
+        function convertToShopFormat(csvRow) {
+            // Clean up website/instagram (remove __ placeholders)
+            const website = csvRow.website === '__' || !csvRow.website ? null : csvRow.website;
+            const instagram = csvRow.instagram === '__' || !csvRow.instagram ? csvRow.instagram.replace(/__/g, '') : csvRow.instagram;
+            
+            // Convert isPartner string to boolean
+            const isPartner = csvRow.isPartner?.toUpperCase() === 'TRUE';
+            
+            // Build hours object if hours exist
+            let hours = null;
+            if (csvRow.sun_open && csvRow.sun_close) {
+                hours = {
+                    periods: []
                 };
                 
-                // Add custom initials if provided
-                if (shop.initials) {
-                    cafe.initials = shop.initials;
-                }
-                
-                shops.push(cafe);
-                
-                // Check if partner
-                if (shop.isPartner && shop.isPartner.toUpperCase() === 'TRUE') {
-                    partners.push(shop.name);
+                const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+                days.forEach((day, index) => {
+                    const openKey = `${day}_open`;
+                    const closeKey = `${day}_close`;
                     
-                    // Parse hours for partner cafes
-                    const periods = [];
-                    const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-                    
-                    days.forEach((day, dayIndex) => {
-                        const openTime = shop[`${day}_open`];
-                        const closeTime = shop[`${day}_close`];
-                        
-                        if (openTime && closeTime) {
-                            periods.push({
-                                open: { day: dayIndex, time: openTime },
-                                close: { day: dayIndex, time: closeTime }
-                            });
-                        }
-                    });
-                    
-                    if (periods.length > 0) {
-                        hours[shop.name] = { periods };
+                    if (csvRow[openKey] && csvRow[closeKey]) {
+                        hours.periods.push({
+                            open: { day: index, time: csvRow[openKey] },
+                            close: { day: index, time: csvRow[closeKey] }
+                        });
                     }
-                }
+                });
             }
             
-            return { shops, partners, hours };
+            return {
+                name: csvRow.name,
+                address: csvRow.address,
+                lat: parseFloat(csvRow.lat),
+                lng: parseFloat(csvRow.lng),
+                type: csvRow.type,
+                website: website,
+                instagram: instagram,
+                isPartner: isPartner,
+                initials: csvRow.initials || null,
+                hours: hours
+            };
         }
-        
-        // Load data from Google Sheets
-        async function loadFromGoogleSheets() {
+
+        // =============================================================
+        // LOAD DATA FROM CSV
+        // =============================================================
+        async function loadCafeData() {
             try {
-                console.log('Fetching data from Google Sheets...');
-                const response = await fetch(GOOGLE_SHEET_URL);
-                const csv = await response.text();
-                const data = parseCSV(csv);
+                const response = await fetch(CSV_URL);
+                const csvText = await response.text();
+                const csvData = parseCSV(csvText);
                 
-                coffeeShops = data.shops;
-                partnerCafes = data.partners;
-                cafeHours = data.hours;
+                coffeeShops = csvData.map(convertToShopFormat);
                 
-                console.log(`✓ Loaded ${coffeeShops.length} cafes from Google Sheets`);
-                console.log(`✓ ${partnerCafes.length} partner cafes`);
+                // Update counts
+                document.getElementById('shopCount').textContent = coffeeShops.length;
+                const partnerCount = coffeeShops.filter(s => s.isPartner).length;
+                document.getElementById('networkCount').textContent = partnerCount;
                 
-                initializeApp();
+                // Initialize map and markers
+                initializeMap();
+                
+                console.log(`✅ Loaded ${coffeeShops.length} cafes (${partnerCount} partners)`);
+                
             } catch (error) {
-                console.error('❌ Error loading Google Sheets:', error);
-                document.body.innerHTML = '<div style="padding: 40px; text-align: center; font-family: monospace;"><h1>Error Loading Data</h1><p>Could not load cafe data from Google Sheets.</p><p>Check the console for details.</p></div>';
+                console.error('Error loading cafe data:', error);
+                document.getElementById('shopCount').textContent = 'ERROR';
+                document.getElementById('networkCount').textContent = 'ERROR';
             }
         }
-        
-        // Initialize app after data is loaded
-        function initializeApp() {
-        // =============================================================
-        // OLD HARDCODED DATA - Now loaded from Google Sheets
-        // =============================================================
-        /*
-        const partnerCafes = [
-            "Fox in the Snow — Italian Village",
-            "One Line Coffee — Short North",
-            "Honey Cup Coffee",
-            "Northstar Cafe — Short North",
-            "Begin Cafe",
-            "Brioso Coffee",
-            "Boston Stoker Coffee",
-            "Blackened Coffee Co.",
-            "Bada Bean Bada Booze — Italian Village",
-            "Bada Bean Bada Booze — Harrison West",
-            "Bitty & Beau's Coffee",
-            "Bake Me Happy",
-            "Black Kahawa",
-            "Moonbird Coffee",
-            "Matari Coffee",
-            "Maudines Coffee",
-            "Mission Coffee Co.",
-            "Marib Coffee — Westerville",
-            "Two Tigers Coffee",
-            "The Lion Coffee Bar",
-            "The Roosevelt Coffeehouse",
-            "Tulip Cafe",
-            "Florin Coffee"
-        ];
 
         // =============================================================
-        // COFFEE SHOPS LIST
+        // HELPER FUNCTIONS
         // =============================================================
-        // To customize map pin initials for any cafe, add: initials: "XX"
-        // Otherwise pins auto-generate from first letters of first two words
-        // =============================================================
-        
-        const coffeeShops = [
-            { name: "Moonbird Coffee", initials: "MB", address: "1400 Holly Ave, Columbus, OH", lat: 39.9891, lng: -83.0207, type: "Specialty Coffee", website: null, instagram: "moonbirdcoffeeco" },
-            { name: "Two Tigers Coffee", address: "3341 N High St, Columbus, OH", lat: 40.0189, lng: -83.0136, type: "Micro Coffee Shop", website: "https://twotigerscoffee.com", instagram: "twotigerscoffee" },
-            { name: "Little Cat", initials: "LC", address: "212 Kelton Ave, Columbus, OH", lat: 39.9531, lng: -82.9732, type: "Boba & Coffee", website: "https://www.littlecatboba.com", instagram: "littlecatboba" },
-            { name: "Ravellos Coffee", address: "883.5 N 4th St, Columbus, OH", lat: 39.9800, lng: -83.0046, type: "Specialty Coffee", website: "https://www.ravellos.coffee", instagram: "ravelloscoffee" },
-            { name: "Begin Cafe", address: "8 E Main St, Westerville, OH", lat: 40.1257, lng: -82.9287, type: "Cafe & Bakery", website: "https://begin-cafe.com", instagram: "begincafe" },
-            { name: "Fox in the Snow — Italian Village", address: "1031 N 4th St, Columbus, OH", lat: 39.9836, lng: -83.0048, type: "Cafe & Bakery", website: "https://www.foxinthesnow.com", instagram: "foxinthesnow" },
-            { name: "Fox in the Snow — Westerville", address: "79 S State St, Westerville, OH", lat: 40.1249, lng: -82.9293, type: "Cafe & Bakery", website: "https://www.foxinthesnow.com", instagram: "foxinthesnow" },
-            { name: "Fox in the Snow — New Albany", address: "5400 New Albany Rd W, New Albany, OH", lat: 40.0830, lng: -82.8165, type: "Cafe & Bakery", website: "https://www.foxinthesnow.com", instagram: "foxinthesnow" },
-            { name: "Brioso Coffee", address: "14 E Gay St, Columbus, OH", lat: 39.9612, lng: -82.9988, type: "Roaster & Cafe", website: "https://briosocoffee.com", instagram: "briosocoffee" },
-            { name: "Honey Cup Coffee", address: "2489 Summit St, Columbus, OH", lat: 40.0045, lng: -82.9962, type: "Coffee Trailer", website: null, instagram: "honeycupcoffeeco" },
-            { name: "Casa Cacao", address: "367 E Hudson St, Columbus, OH", lat: 40.0047, lng: -82.9928, type: "Kava & Cacao Bar", website: "https://www.casacacaocolumbus.com", instagram: "casacacaocbus" },
-            { name: "Matari Coffee", address: "1572 N High St, Columbus, OH", lat: 39.9939, lng: -83.0088, type: "Yemeni Coffee", website: "https://mataricoffee.com", instagram: "mataricoffeeco" },
-            { name: "Northstar Cafe — Short North", address: "951 N High St, Columbus, OH", lat: 39.9822, lng: -83.0042, type: "Cafe & Restaurant", website: "https://northstarcafe.com", instagram: "northstarcafe" },
-            { name: "Daydreamer Coffee", address: "222 W Lane Ave, Columbus, OH", lat: 40.0067, lng: -83.0128, type: "Specialty Coffee", website: "https://www.daydreamer.coffee", instagram: "daydreamer.coffee" },
-            { name: "25 Dials Cafe", address: "1431 N High St, Columbus, OH", lat: 39.9921, lng: -83.0084, type: "Specialty Coffee", website: null, instagram: "25dialscoffee" },
-            { name: "Espresso Air", address: "25 N State St, Westerville, OH", lat: 40.1261, lng: -82.9289, type: "Turkish Coffee", website: null, instagram: "espressoair" },
-            { name: "Florin Coffee", address: "874 Oakland Park Ave, Columbus, OH", lat: 40.0009, lng: -82.9886, type: "Roaster & Cafe", website: "https://florincoffee.com", instagram: "florincoffee" },
-            { name: "Java Central Coffee Roasters", address: "20 S State St, Westerville, OH", lat: 40.1258, lng: -82.9291, type: "Roaster & Cafe", website: "https://javacentral.coffee", instagram: "javacentral1" },
-            { name: "Stauf's Coffee — Grandview", address: "1277 Grandview Ave, Columbus, OH", lat: 39.9847, lng: -83.0406, type: "Roaster & Cafe", website: "https://staufs.com", instagram: "staufs" },
-            { name: "Stauf's Coffee — German Village", address: "627 S 3rd St, Columbus, OH", lat: 39.9505, lng: -82.9957, type: "Roaster & Cafe", website: "https://staufs.com", instagram: "staufs" },
-            { name: "Stauf's Coffee — Victorian Village", address: "2060 N High St, Columbus, OH", lat: 40.0031, lng: -83.0101, type: "Roaster & Cafe", website: "https://staufs.com", instagram: "staufs" },
-            { name: "Stauf's Coffee — Idea Foundry", address: "421 W State St, Columbus, OH", lat: 39.9670, lng: -83.0149, type: "Roaster & Cafe", website: "https://staufs.com", instagram: "staufs" },
-            { name: "The Lion Coffee Bar", address: "2511 E Main St, Bexley, OH", lat: 39.9623, lng: -82.9334, type: "Cafe & Cocktails", website: null, instagram: "thelionbexley" },
-            { name: "Kittie's Cakes — German Village", address: "495 S 3rd St, Columbus, OH", lat: 39.9525, lng: -82.9966, type: "Bakery & Coffee", website: "https://kittiescakes.com", instagram: "kittiescakes" },
-            { name: "Kittie's Cakes — Bexley", address: "2424 E Main St, Columbus, OH", lat: 39.9623, lng: -82.9420, type: "Bakery & Coffee", website: "https://kittiescakes.com", instagram: "kittiescakes" },
-            { name: "Kittie's Cakes — Worthington", address: "693 High St, Worthington, OH", lat: 40.0933, lng: -83.0181, type: "Bakery & Coffee", website: "https://kittiescakes.com", instagram: "kittiescakes" },
-            { name: "Global Gallery", address: "3535 N High St, Columbus, OH", lat: 40.0205, lng: -83.0141, type: "Fair Trade Coffee", website: "https://globalgallerycolumbus.com", instagram: "globalgallerycbus" },
-            { name: "Black Kahawa", address: "2 E Broad St, Columbus, OH", lat: 39.9613, lng: -82.9988, type: "East African Coffee", website: null, instagram: "blackkahawa" },
-            { name: "One Line Coffee — Short North", address: "745 N 4th St, Columbus, OH", lat: 39.9769, lng: -83.0045, type: "Roaster & Cafe", website: "https://onelinecoffee.com", instagram: "onelinecoffee" },
-            { name: "One Line Coffee — Downtown", address: "82 E Broad St, Columbus, OH", lat: 39.9614, lng: -82.9976, type: "Roaster & Cafe", website: "https://onelinecoffee.com", instagram: "onelinecoffee" },
-            { name: "Maudines Coffee", address: "77 Belle St, Columbus, OH", lat: 39.9645, lng: -83.0168, type: "Hotel Cafe", website: null, instagram: "maudinescoffee" },
-            { name: "Royal Flamingo Coffee", address: "945 N 4th St, Columbus, OH", lat: 39.9817, lng: -83.0047, type: "Roaster & Cafe", website: "https://www.royalflamingocoffee.com", instagram: "royalflamingocoffee" },
-            { name: "Mission Coffee Co.", address: "3211 N High St, Columbus, OH", lat: 40.0173, lng: -83.0131, type: "Specialty Coffee", website: "https://missioncoffeeco.com", instagram: "missioncoffeeco" },
-            { name: "Blackened Coffee Co.", address: "2619 N High St, Columbus, OH", lat: 40.0108, lng: -83.0120, type: "Plant-Based Coffee", website: null, instagram: "blackenedcoffee" },
-            { name: "Kafé Kerouac", address: "2250 N High St, Columbus, OH", lat: 40.0050, lng: -83.0105, type: "Cafe & Music Venue", website: null, instagram: "cafekerouac" },
-            { name: "The Roosevelt Coffeehouse", address: "300 W 5th Ave, Columbus, OH", lat: 39.9859, lng: -83.0094, type: "Social Enterprise", website: "https://rooseveltcoffee.com", instagram: "rooseveltcoffee" },
-            { name: "Boston Stoker Coffee", address: "1101 W 1st Ave, Columbus, OH", lat: 39.9875, lng: -83.0271, type: "Roaster & Cafe", website: "https://bostonstoker.com", instagram: "bostonstoker" },
-            { name: "Crimson Cup — Upper Arlington", address: "2468 Northwest Blvd, Columbus, OH", lat: 40.0244, lng: -83.0738, type: "Roaster & Cafe", website: "https://crimsoncup.com", instagram: "crimsoncupcoffee" },
-            { name: "Crimson Cup — Clintonville", address: "4541 N High St, Columbus, OH", lat: 40.0436, lng: -83.0181, type: "Roaster & Cafe", website: "https://crimsoncup.com", instagram: "crimsoncupcoffee" },
-            { name: "Crimson Cup — East Town", address: "5000 E Main St, Columbus, OH", lat: 39.9624, lng: -82.8574, type: "Roaster & Cafe", website: "https://crimsoncup.com", instagram: "crimsoncupcoffee" },
-            { name: "Winans Chocolates + Coffees — German Village", address: "197 E Beck St, Columbus, OH", lat: 39.9525, lng: -82.9981, type: "Coffee & Chocolates", website: "https://winanscandies.com", instagram: "winanscandies" },
-            { name: "Winans Chocolates + Coffees — Dublin", address: "7370 Sawmill Rd, Dublin, OH", lat: 40.1125, lng: -83.1373, type: "Coffee & Chocolates", website: "https://winanscandies.com", instagram: "winanscandies" },
-            { name: "Upper Cup Coffee", address: "1174 Kenny Centre Mall, Columbus, OH", lat: 40.0498, lng: -83.0738, type: "Specialty Coffee", website: null, instagram: "uppercupcoffee" },
-            { name: "Qamaria Yemeni Coffee", address: "3221 Hilliard Rome Rd, Hilliard, OH", lat: 40.0336, lng: -83.1439, type: "Yemeni Coffee", website: null, instagram: "qamariacoffee" },
-            { name: "Cure Coffee & Cocktails", address: "45 E Gay St, Columbus, OH", lat: 39.9616, lng: -82.9971, type: "Coffee & Cocktails", website: null, instagram: "curecbus" },
-            { name: "Bada Bean Bada Booze — Italian Village", address: "231 E 1st Ave, Columbus, OH", lat: 39.9873, lng: -82.9979, type: "Coffee & Cocktails", website: null, instagram: "badabeanbadabooze" },
-            { name: "Bada Bean Bada Booze — Harrison West", address: "527 W 5th Ave, Columbus, OH", lat: 39.9859, lng: -83.0139, type: "Coffee & Cocktails", website: null, instagram: "badabeanbadabooze" },
-            { name: "Pistacia Vera", address: "541 S 3rd St, Columbus, OH", lat: 39.9531, lng: -82.9960, type: "Bakery & Cafe", website: "https://pistaciavera.com", instagram: "pistaciavera" },
-            { name: "Stonebrick Cafe", address: "999 Bethel Rd, Columbus, OH", lat: 40.0501, lng: -83.0659, type: "Specialty Coffee", website: null, instagram: "stonebrickcafe" },
-            { name: "Winn Winn Cafe", address: "1212 W 3rd Ave, Columbus, OH", lat: 39.9837, lng: -83.0289, type: "Cafe & Bakery", website: null, instagram: "winnwinncafe" },
-            { name: "Luck Bros Coffee", address: "1101 W 1st Ave, Columbus, OH", lat: 39.9875, lng: -83.0271, type: "Specialty Coffee", website: null, instagram: "luckbroscoffee" },
-            { name: "Chocolate Cafe", address: "2871 N High St, Columbus, OH", lat: 40.0126, lng: -83.0125, type: "Cafe & Chocolates", website: null, instagram: "chocolatecafe_cbus" },
-            { name: "Marib Coffee — Westerville", address: "610 W Schrock Rd, Westerville, OH", lat: 40.0965, lng: -82.9464, type: "Yemeni Coffee", website: null, instagram: "maribcoffee" },
-            { name: "Shibam Coffee", address: "1900 Morse Rd, Columbus, OH", lat: 40.0632, lng: -82.9827, type: "Yemeni Coffee", website: null, instagram: "shibamcoffee" },
-            { name: "Bitty & Beau's Coffee", address: "3110 Kingsdale Center, Upper Arlington, OH", lat: 40.0155, lng: -83.0623, type: "Specialty Coffee", website: "https://www.bittyandbeauscoffee.com", instagram: "bittyandbeauscoffee" },
-            { name: "Bake Me Happy", address: "59 Parsons Ave, Columbus, OH", lat: 39.9619, lng: -82.9897, type: "Gluten-Free Bakery", website: "https://www.bakemehappy.com", instagram: "bakemehappycbus" },
-            { name: "Saucy Brew Works Coffee", address: "3885 W 3rd Ave, Columbus, OH", lat: 39.9837, lng: -83.0622, type: "Coffee & Brewery", website: "https://www.saucybrewworks.com", instagram: "saucybrewworks" },
-            { name: "Standardized Brewing", address: "7273 Huntington Park Dr, Lewis Center, OH", lat: 40.1838, lng: -83.0134, type: "Coffee & Brewery", website: null, instagram: "standardizedbrewing" },
-            { name: "Tulip Cafe", address: "5572 Woerner Temple Rd, Dublin, OH", lat: 40.1114, lng: -83.1518, type: "Turkish Cafe", website: null, instagram: "tulipcafedublin" },
-            { name: "Callin' Your Bluff Coffee", address: "458 W Chapel St, Columbus, OH", lat: 39.9665, lng: -83.0053, type: "Pop-Up Coffee Cart", website: "https://callinyourbluffcoffee.com", instagram: "callinyourbluffcoffee" },
-            { name: "East African Coffee House", address: "4359 Morse Rd, Columbus, OH", lat: 40.0632, lng: -82.9209, type: "East African Coffee", website: "https://www.eastafricancoffeehouse.com", instagram: "eastafricancoffeehouse" },
-            { name: "Crimson Easton", address: "4066 Worth Ave, Columbus, OH", lat: 40.0491, lng: -82.9168, type: "Roaster & Cafe", website: "https://crimsoncup.com", instagram: "crimsoncolumbus" }
-        ];
-
-        let currentView = 'map';
-        let filterMode = 'all'; // 'all' or 'partner'
-        
-        // =============================================================
-        // MANUAL HOURS FOR PARTNER CAFES
-        // =============================================================
-        
-        const cafeHours = {
-            "Fox in the Snow — Italian Village": {
-                periods: [
-                    { open: { day: 0, time: "0700" }, close: { day: 0, time: "1500" } },
-                    { open: { day: 1, time: "0700" }, close: { day: 1, time: "1500" } },
-                    { open: { day: 2, time: "0700" }, close: { day: 2, time: "1500" } },
-                    { open: { day: 3, time: "0700" }, close: { day: 3, time: "1500" } },
-                    { open: { day: 4, time: "0700" }, close: { day: 4, time: "1500" } },
-                    { open: { day: 5, time: "0700" }, close: { day: 5, time: "1500" } },
-                    { open: { day: 6, time: "0700" }, close: { day: 6, time: "1500" } }
-                ]
-            },"Florin Coffee": {
-                periods: [
-                    { open: { day: 0, time: "0700" }, close: { day: 0, time: "1500" } },
-                    { open: { day: 1, time: "0700" }, close: { day: 1, time: "1500" } },
-                    { open: { day: 2, time: "0700" }, close: { day: 2, time: "1500" } },
-                    { open: { day: 3, time: "0700" }, close: { day: 3, time: "1500" } },
-                    { open: { day: 4, time: "0700" }, close: { day: 4, time: "1500" } },
-                    { open: { day: 5, time: "0700" }, close: { day: 5, time: "1500" } },
-                    { open: { day: 6, time: "0700" }, close: { day: 6, time: "1500" } }
-                ]
-            },
-            "One Line Coffee — Short North": {
-                periods: [
-                    { open: { day: 0, time: "0730" }, close: { day: 0, time: "1700" } },
-                    { open: { day: 1, time: "0630" }, close: { day: 1, time: "1700" } },
-                    { open: { day: 2, time: "0630" }, close: { day: 2, time: "1700" } },
-                    { open: { day: 3, time: "0630" }, close: { day: 3, time: "1700" } },
-                    { open: { day: 4, time: "0630" }, close: { day: 4, time: "1700" } },
-                    { open: { day: 5, time: "0630" }, close: { day: 5, time: "1700" } },
-                    { open: { day: 6, time: "0730" }, close: { day: 6, time: "1700" } }
-                ]
-            },
-            "Brioso Coffee": {
-                periods: [
-                    { open: { day: 0, time: "0800" }, close: { day: 0, time: "1600" } },
-                    { open: { day: 1, time: "0700" }, close: { day: 1, time: "1800" } },
-                    { open: { day: 2, time: "0700" }, close: { day: 2, time: "1800" } },
-                    { open: { day: 3, time: "0700" }, close: { day: 3, time: "1800" } },
-                    { open: { day: 4, time: "0700" }, close: { day: 4, time: "1800" } },
-                    { open: { day: 5, time: "0700" }, close: { day: 5, time: "1800" } },
-                    { open: { day: 6, time: "0800" }, close: { day: 6, time: "1700" } }
-                ]
-            }
-            // Add more partner cafes here as you onboard them
-        };
-        */
-        // =============================================================
-        // CUSTOM INITIALS - How to customize map pin letters:
-        // =============================================================
-        // By default, pins automatically show first letter of first two words
-        // To customize any cafe's initials, add: initials: "XX"
-        // 
-        // Example:
-        // { name: "Moonbird Coffee", initials: "MB", address: "...", ... }
-        // 
-        // Leave it out for automatic generation:
-        // { name: "Two Tigers Coffee", address: "...", ... }  // Auto: "TT"
-        // =============================================================
-
         function getInitials(shop) {
-            // If cafe has custom initials defined, use those
             if (shop.initials) return shop.initials.toUpperCase();
             
-            // Otherwise, auto-generate from name
             const words = shop.name.replace(/—/g, ' ').split(' ');
             if (words.length === 1) return words[0].substring(0, 2).toUpperCase();
             return (words[0][0] + words[1][0]).toUpperCase();
         }
 
-        function isPartnerCafe(cafeName) {
-            return partnerCafes.includes(cafeName);
-        }
-        
-        // Hours display logic - only for partner cafes
         function getHoursDisplay(shop) {
-            // Only show hours for partner cafes
-            if (!isPartnerCafe(shop.name)) return null;
-            
-            // Check if we have hours for this cafe
-            const hours = cafeHours[shop.name];
-            if (!hours) return null;
-            
-            return formatHoursText(hours);
+            if (!shop.isPartner || !shop.hours) return null;
+            return formatHoursText(shop.hours);
         }
         
         function formatHoursText(openingHours) {
             if (!openingHours || !openingHours.periods) return null;
             
             const now = new Date();
-            const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
-            const currentTime = now.getHours() * 100 + now.getMinutes(); // e.g., 1430 for 2:30 PM
+            const currentDay = now.getDay();
+            const currentTime = now.getHours() * 100 + now.getMinutes();
             
-            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
             const pluralDays = ['Sundays', 'Mondays', 'Tuesdays', 'Wednesdays', 'Thursdays', 'Fridays', 'Saturdays'];
             
-            // Find today's hours
             const todaysPeriod = openingHours.periods.find(p => p.open.day === currentDay);
             
             if (!todaysPeriod) {
-                // Closed today, find next open day
                 let nextDay = (currentDay + 1) % 7;
                 let daysChecked = 0;
                 
@@ -1643,7 +1253,6 @@
                 return { text: 'Hours unavailable', isOpen: false };
             }
             
-            // Check if currently open
             const openTime = parseInt(todaysPeriod.open.time);
             const closeTime = todaysPeriod.close ? parseInt(todaysPeriod.close.time) : 2359;
             
@@ -1656,16 +1265,13 @@
                     isOpen: true
                 };
             } else {
-                // Closed now
                 if (currentTime < openTime) {
-                    // Opens later today
                     const openingTime = formatTime(todaysPeriod.open.time);
                     return {
                         text: `Opens ${openingTime} on ${pluralDays[currentDay]}`,
                         isOpen: false
                     };
                 } else {
-                    // Closed for the day, find next open day
                     let nextDay = (currentDay + 1) % 7;
                     let daysChecked = 0;
                     
@@ -1700,16 +1306,122 @@
             return minutes === '00' ? `${hours}${ampm}` : `${hours}:${minutes}${ampm}`;
         }
 
-        document.getElementById('shopCount').textContent = coffeeShops.length;
-        
-        // Calculate "Partner Cafes" count using the partnerCafes array
-        const networkCount = partnerCafes.length;
-        document.getElementById('networkCount').textContent = networkCount;
+        // =============================================================
+        // MAP INITIALIZATION
+        // =============================================================
+        function initializeMap() {
+            map = L.map('map', {
+                zoomControl: false
+            }).setView([39.9833, -83.0167], 12);
 
+            L.control.zoom({
+                position: 'bottomleft'
+            }).addTo(map);
+
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+                attribution: '© OpenStreetMap, © CartoDB',
+                maxZoom: 19
+            }).addTo(map);
+
+            createMarkers();
+        }
+
+        function createMarkers() {
+            coffeeShops.forEach((shop, index) => {
+                const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(shop.address)}`;
+                const appleMapsUrl = `https://maps.apple.com/?daddr=${encodeURIComponent(shop.address)}`;
+                const initials = getInitials(shop);
+                const markerClass = shop.isPartner ? 'gradient' : 'black';
+                
+                const customIcon = L.divIcon({
+                    html: `<div class="custom-marker ${markerClass}" data-index="${index}">${initials}</div>`,
+                    className: '',
+                    iconSize: [36, 48],
+                    iconAnchor: [18, 48]
+                });
+                
+                const linkUrl = shop.website;
+                
+                const instagramIcon = shop.instagram ? `
+                    <a href="https://instagram.com/${shop.instagram}" target="_blank" rel="noopener noreferrer" class="instagram-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                    </a>
+                ` : '';
+                
+                const popupTypeLink = linkUrl ? 
+                    `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer" class="popup-type">${shop.type}</a>` : 
+                    `<span class="popup-type no-link">${shop.type}</span>`;
+                
+                const hoursData = getHoursDisplay(shop);
+                const hoursHTML = hoursData ? `<div class="shop-hours ${hoursData.isOpen ? 'open' : 'closed'}">${hoursData.text}</div>` : '';
+                
+                const marker = L.marker([shop.lat, shop.lng], { icon: customIcon })
+                    .addTo(map)
+                    .bindTooltip(shop.name, {
+                        permanent: false,
+                        direction: 'top',
+                        offset: [0, -20],
+                        className: 'custom-tooltip'
+                    })
+                    .bindPopup(`
+                        <div class="popup-content">
+                            <div class="popup-title">${shop.name}</div>
+                            <div class="popup-address">${shop.address}</div>
+                            ${hoursHTML}
+                            <div class="popup-meta">
+                                ${popupTypeLink}
+                                ${instagramIcon}
+                            </div>
+                            <div class="directions-buttons">
+                                <a href="${googleMapsUrl}" target="_blank" class="dir-btn" rel="noopener noreferrer">Google</a>
+                                <a href="${appleMapsUrl}" target="_blank" class="dir-btn" rel="noopener noreferrer">Apple</a>
+                            </div>
+                        </div>
+                    `, {
+                        closeButton: true,
+                        autoClose: true,
+                        closeOnClick: false
+                    });
+                
+                marker.on('popupopen', () => {
+                    const popup = marker.getPopup();
+                    const popupElement = popup.getElement();
+                    const links = popupElement.querySelectorAll('a');
+                    
+                    links.forEach(link => {
+                        link.addEventListener('click', (e) => {
+                            if (link.href) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                window.open(link.href, '_blank', 'noopener,noreferrer');
+                            }
+                        });
+                    });
+                    
+                    const closeButton = popupElement.querySelector('.leaflet-popup-close-button');
+                    if (closeButton) {
+                        closeButton.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            e.stopImmediatePropagation();
+                            marker.closePopup();
+                            return false;
+                        }, true);
+                    }
+                });
+                
+                markers.push({ marker, shop, index });
+            });
+        }
+
+        // =============================================================
+        // FILTER FUNCTIONALITY
+        // =============================================================
         function filterCafes(mode) {
             filterMode = mode;
             
-            // Update stat item active states
             document.querySelectorAll('.stat-item').forEach(item => {
                 item.classList.remove('active');
                 if (item.dataset.filter === mode) {
@@ -1717,12 +1429,9 @@
                 }
             });
             
-            // Filter markers on map
             markers.forEach(({ marker, shop }) => {
-                const hasGradient = isPartnerCafe(shop.name);
-                
                 if (mode === 'partner') {
-                    if (hasGradient) {
+                    if (shop.isPartner) {
                         marker.addTo(map);
                     } else {
                         map.removeLayer(marker);
@@ -1732,13 +1441,11 @@
                 }
             });
             
-            // If we're on list view, re-render it
             if (currentView === 'list') {
                 renderListView();
             }
         }
         
-        // Stat item click handlers
         document.querySelectorAll('.stat-item').forEach(item => {
             item.addEventListener('click', () => {
                 const filter = item.dataset.filter;
@@ -1746,118 +1453,9 @@
             });
         });
 
-        // Initialize map
-        const map = L.map('map', {
-            zoomControl: false
-        }).setView([39.9833, -83.0167], 12);
-
-        L.control.zoom({
-            position: 'bottomleft'
-        }).addTo(map);
-
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-            attribution: '© OpenStreetMap, © CartoDB',
-            maxZoom: 19
-        }).addTo(map);
-
-        let markers = [];
-        const shopList = document.getElementById('shopList');
-        
-        // Create markers and list items
-        coffeeShops.forEach((shop, index) => {
-            const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(shop.address)}`;
-            const appleMapsUrl = `https://maps.apple.com/?daddr=${encodeURIComponent(shop.address)}`;
-            const initials = getInitials(shop); // Pass whole shop object
-            const useGradient = isPartnerCafe(shop.name);
-            const markerClass = useGradient ? 'gradient' : 'black';
-            
-            const customIcon = L.divIcon({
-                html: `<div class="custom-marker ${markerClass}" data-index="${index}">${initials}</div>`,
-                className: '',
-                iconSize: [36, 48],
-                iconAnchor: [18, 48]
-            });
-            
-            const linkUrl = shop.website;
-            
-            // Create Instagram icon element ID for this shop
-            const instagramIconId = `instagram-${index}`;
-            const instagramIcon = `
-                <a href="https://instagram.com/${shop.instagram}" target="_blank" rel="noopener noreferrer" class="instagram-link" id="${instagramIconId}">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                    </svg>
-                </a>
-            `;
-            
-            const badgeId = `badge-${index}`;
-            const popupTypeLink = linkUrl ? `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer" class="popup-type" id="${badgeId}">${shop.type}</a>` : `<span class="popup-type no-link">${shop.type}</span>`;
-            
-            // Get hours for popup if available
-            const hoursData = getHoursDisplay(shop);
-            const hoursHTML = hoursData ? `<div class="shop-hours ${hoursData.isOpen ? 'open' : 'closed'}">${hoursData.text}</div>` : '';
-            
-            const marker = L.marker([shop.lat, shop.lng], { icon: customIcon })
-                .addTo(map)
-                .bindTooltip(shop.name, {
-                    permanent: false,
-                    direction: 'top',
-                    offset: [0, -20],
-                    className: 'custom-tooltip'
-                })
-                .bindPopup(`
-                    <div class="popup-content">
-                        <div class="popup-title">${shop.name}</div>
-                        <div class="popup-address">${shop.address}</div>
-                        ${hoursHTML}
-                        <div class="popup-meta">
-                            ${popupTypeLink}
-                            ${instagramIcon}
-                        </div>
-                        <div class="directions-buttons">
-                            <a href="${googleMapsUrl}" target="_blank" class="dir-btn" rel="noopener noreferrer">Google</a>
-                            <a href="${appleMapsUrl}" target="_blank" class="dir-btn" rel="noopener noreferrer">Apple</a>
-                        </div>
-                    </div>
-                `, {
-                    closeButton: true,
-                    autoClose: true,
-                    closeOnClick: false
-                });
-            
-            // FIXED: Proper popup event handling to prevent reset
-            marker.on('popupopen', () => {
-                const popup = marker.getPopup();
-                const popupElement = popup.getElement();
-                const links = popupElement.querySelectorAll('a');
-                
-                links.forEach(link => {
-                    link.addEventListener('click', (e) => {
-                        if (link.href) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            window.open(link.href, '_blank', 'noopener,noreferrer');
-                        }
-                    });
-                });
-                
-                // FIXED: Prevent close button from causing app reset
-                const closeButton = popupElement.querySelector('.leaflet-popup-close-button');
-                if (closeButton) {
-                    closeButton.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        e.stopImmediatePropagation();
-                        marker.closePopup();
-                        return false;
-                    }, true); // Use capture phase
-                }
-            });
-            
-            markers.push({ marker, shop, index });
-        });
-
-        // View toggle functionality
+        // =============================================================
+        // VIEW TOGGLE FUNCTIONALITY
+        // =============================================================
         document.querySelectorAll('.view-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const view = btn.dataset.view;
@@ -1870,9 +1468,7 @@
                 const listViewEl = document.getElementById('listView');
                 const aboutViewEl = document.getElementById('aboutView');
                 const joinViewEl = document.getElementById('joinView');
-                const listSearchBox = document.getElementById('listSearchBox');
                 
-                // Hide everything first
                 mapEl.classList.add('hidden');
                 listViewEl.classList.add('hidden');
                 aboutViewEl.classList.add('hidden');
@@ -1883,7 +1479,6 @@
                     setTimeout(() => map.invalidateSize(), 100);
                 } else if (view === 'list') {
                     listViewEl.classList.remove('hidden');
-                    listSearchBox.placeholder = 'SEARCH CAFES...';
                     renderListView();
                 } else if (view === 'about') {
                     aboutViewEl.classList.remove('hidden');
@@ -1894,24 +1489,18 @@
                 }
             });
         });
-        
-        // Render list view
+
+        // =============================================================
+        // LIST VIEW RENDER
+        // =============================================================
         function renderListView(searchQuery = '') {
             const listContent = document.getElementById('listContent');
             
-            // Check if data is loaded
-            if (coffeeShops.length === 0) {
-                listContent.innerHTML = '<div class="loading-message">Loading cafes from Google Sheets...</div>';
-                return;
-            }
-            
             const filteredShops = coffeeShops.filter(shop => {
-                // Apply filter mode - check for gradient marker
-                if (filterMode === 'partner' && !isPartnerCafe(shop.name)) {
+                if (filterMode === 'partner' && !shop.isPartner) {
                     return false;
                 }
                 
-                // Apply search
                 if (searchQuery) {
                     const searchText = `${shop.name} ${shop.address} ${shop.type}`.toLowerCase();
                     return searchText.includes(searchQuery.toLowerCase());
@@ -1935,15 +1524,15 @@
                     `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer" class="shop-type">${shop.type}</a>` : 
                     `<span class="shop-type no-link">${shop.type}</span>`;
                 
-                const instagramIcon = `
+                const instagramIcon = shop.instagram ? `
                     <a href="https://instagram.com/${shop.instagram}" target="_blank" rel="noopener noreferrer" class="instagram-link">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                             <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
                         </svg>
                     </a>
-                `;
+                ` : '';
                 
-                const spillBadge = isPartnerCafe(shop.name) ? 
+                const spillBadge = shop.isPartner ? 
                     `<div class="spill-badge">
                         <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <defs>
@@ -1976,7 +1565,6 @@
                 `;
             }).join('');
             
-            // Populate hours for shops that have them
             setTimeout(() => {
                 filteredShops.forEach((shop, index) => {
                     const actualIndex = coffeeShops.indexOf(shop);
@@ -1991,7 +1579,6 @@
                 });
             }, 0);
             
-            // Add click handlers for links in list view
             setTimeout(() => {
                 const listLinks = listContent.querySelectorAll('a');
                 listLinks.forEach(link => {
@@ -2006,14 +1593,15 @@
             }, 0);
         }
 
-        // Search functionality for list view
         const listSearchBox = document.getElementById('listSearchBox');
         listSearchBox.addEventListener('input', (e) => {
             const query = e.target.value;
             renderListView(query);
         });
-        
-        // Render about view
+
+        // =============================================================
+        // ABOUT VIEW
+        // =============================================================
         function renderAboutView() {
             const aboutContent = document.getElementById('aboutContent');
             
@@ -2069,8 +1657,10 @@
                 </div>
             `;
         }
-        
-        // Render join view
+
+        // =============================================================
+        // JOIN VIEW
+        // =============================================================
         function renderJoinView() {
             const joinContent = document.getElementById('joinContent');
             
@@ -2129,8 +1719,10 @@
                 </div>
             `;
         }
-        
-        // Map search functionality
+
+        // =============================================================
+        // MAP SEARCH FUNCTIONALITY
+        // =============================================================
         const mapSearchToggle = document.getElementById('mapSearchToggle');
         const mapSearchInput = document.getElementById('mapSearchInput');
         
@@ -2140,7 +1732,6 @@
                 mapSearchInput.focus();
             } else {
                 mapSearchInput.value = '';
-                // Reset all markers to normal state
                 markers.forEach(({ marker }) => {
                     marker.setOpacity(0.9);
                 });
@@ -2151,14 +1742,12 @@
             const query = e.target.value.toLowerCase();
             
             if (!query) {
-                // Reset all markers
                 markers.forEach(({ marker }) => {
                     marker.setOpacity(0.9);
                 });
                 return;
             }
             
-            // Filter markers based on search
             markers.forEach(({ marker, shop }) => {
                 const searchText = `${shop.name} ${shop.address} ${shop.type}`.toLowerCase();
                 if (searchText.includes(query)) {
@@ -2168,22 +1757,19 @@
                 }
             });
         });
-        
-        // Center map on first match when Enter is pressed
+
         mapSearchInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 const query = e.target.value.toLowerCase();
                 if (!query) return;
                 
-                // Find first matching cafe
                 const firstMatch = markers.find(({ shop }) => {
                     const searchText = `${shop.name} ${shop.address} ${shop.type}`.toLowerCase();
                     return searchText.includes(query);
                 });
                 
-                // Center map on first match with zoom level 13
                 if (firstMatch) {
-                    map.setView([firstMatch.shop.lat, firstMatch.shop.lng], 13, {
+                    map.setView([firstMatch.shop.lat, firstMatch.shop.lng], 15, {
                         animate: true,
                         duration: 0.5
                     });
@@ -2191,7 +1777,6 @@
             }
         });
         
-        // Close search when clicking outside
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.map-search-container')) {
                 mapSearchInput.classList.remove('active');
@@ -2201,17 +1786,16 @@
                 });
             }
         });
-        
-        } // End of initializeApp function
-        
-        // Load data from Google Sheets when page loads
-        loadFromGoogleSheets();
-        
+
+        // =============================================================
+        // INITIALIZE ON PAGE LOAD
+        // =============================================================
+        loadCafeData();
     </script>
-        <script>
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("service-worker.js");
-  }
-</script>
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("service-worker.js");
+        }
+    </script>
 </body>
 </html>
