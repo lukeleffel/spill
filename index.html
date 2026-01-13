@@ -6,7 +6,7 @@
     <link rel="manifest" href="manifest.json">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coffee Map - Independent Cafe Culture</title>
+    <title>Spill Coffee Map - Independent Cafe Culture</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -346,8 +346,25 @@
         }
         
         .city-header {
-            top: 60px;
-            background: rgba(255, 255, 255, 0.95);
+            padding: 14px 24px;
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.08), rgba(155, 89, 182, 0.08), rgba(255, 107, 157, 0.08));
+            border-bottom: 2px solid rgba(44, 44, 44, 0.15);
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        
+        .city-header.collapsible {
+            position: relative;
+        }
+        
+        .city-header:hover {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.15), rgba(155, 89, 182, 0.15), rgba(255, 107, 157, 0.15));
+            border-bottom: 2px solid var(--retro-pink);
+        }
+        
+        .city-header.expanded {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.12), rgba(155, 89, 182, 0.12), rgba(255, 107, 157, 0.12));
             border-bottom: 2px solid var(--retro-pink);
         }
         
@@ -358,6 +375,26 @@
             margin: 0;
             color: var(--dark);
             letter-spacing: 0.02em;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .cafe-count {
+            font-size: 13px;
+            font-weight: 400;
+            opacity: 0.6;
+            margin-left: 8px;
+        }
+        
+        .expand-icon {
+            font-size: 12px;
+            transition: transform 0.2s;
+            color: var(--retro-pink);
+        }
+        
+        .city-cafes {
+            background: rgba(255, 248, 231, 0.5);
         }
         
         .shop-card::before {
@@ -1554,15 +1591,12 @@
             
             // Sort by state, then city, then name
             filteredShops.sort((a, b) => {
-                // First sort by state
                 if (a.state !== b.state) {
                     return a.state.localeCompare(b.state);
                 }
-                // Then by city
                 if (a.city !== b.city) {
                     return a.city.localeCompare(b.city);
                 }
-                // Then by name
                 return a.name.localeCompare(b.name);
             });
             
@@ -1571,85 +1605,150 @@
                 return;
             }
             
-            // Build HTML with state/city grouping headers
-            let html = '';
-            let currentState = '';
-            let currentCity = '';
+            // Group cafes by state and city
+            const stateGroups = {};
+            filteredShops.forEach(shop => {
+                const state = shop.state || 'Unknown State';
+                const city = shop.city || 'Unknown City';
+                
+                if (!stateGroups[state]) {
+                    stateGroups[state] = {};
+                }
+                if (!stateGroups[state][city]) {
+                    stateGroups[state][city] = [];
+                }
+                stateGroups[state][city].push(shop);
+            });
             
-            filteredShops.forEach((shop, index) => {
-                const actualIndex = coffeeShops.indexOf(shop);
-                
-                // Add state header if state changes
-                if (shop.state !== currentState) {
-                    currentState = shop.state;
-                    currentCity = ''; // Reset city when state changes
-                    html += `
-                        <div class="section-header state-header">
-                            <h3>${shop.state || 'Unknown State'}</h3>
-                        </div>
-                    `;
-                }
-                
-                // Add city header if city changes
-                if (shop.city !== currentCity) {
-                    currentCity = shop.city;
-                    html += `
-                        <div class="section-header city-header">
-                            <h4>${shop.city || 'Unknown City'}</h4>
-                        </div>
-                    `;
-                }
-                
-                const linkUrl = shop.website;
-                const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(shop.address)}`;
-                const appleMapsUrl = `https://maps.apple.com/?daddr=${encodeURIComponent(shop.address)}`;
-                
-                const typeLink = linkUrl ? 
-                    `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer" class="shop-type">${shop.type}</a>` : 
-                    `<span class="shop-type no-link">${shop.type}</span>`;
-                
-                const instagramIcon = shop.instagram ? `
-                    <a href="https://instagram.com/${shop.instagram}" target="_blank" rel="noopener noreferrer" class="instagram-link">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                        </svg>
-                    </a>
-                ` : '';
-                
-                const spillBadge = shop.isPartner ? 
-                    `<div class="spill-badge">
-                        <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <defs>
-                                <linearGradient id="spillGradient${actualIndex}" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" style="stop-color:#4A90E2;stop-opacity:1" />
-                                    <stop offset="50%" style="stop-color:#9B59B6;stop-opacity:1" />
-                                    <stop offset="100%" style="stop-color:#FF6B9D;stop-opacity:1" />
-                                </linearGradient>
-                            </defs>
-                            <circle cx="12" cy="12" r="11" fill="url(#spillGradient${actualIndex})" stroke="#2C2C2C" stroke-width="1"/>
-                            <text x="12" y="16" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">S</text>
-                        </svg>
-                    </div>` : '';
-                
+            // Build collapsible HTML
+            let html = '';
+            
+            Object.keys(stateGroups).sort().forEach(state => {
                 html += `
-                    <div class="shop-card">
-                        <div class="shop-name">${shop.name}</div>
-                        <div class="shop-address">${shop.address}</div>
-                        <div class="shop-hours-placeholder" data-shop-index="${actualIndex}"></div>
-                        <div class="shop-meta">
-                            ${typeLink}
-                            ${instagramIcon}
-                            <div class="directions-buttons">
-                                <a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer" class="dir-btn">Google</a>
-                                <a href="${appleMapsUrl}" target="_blank" rel="noopener noreferrer" class="dir-btn">Apple</a>
-                            </div>
-                        </div>
-                        ${spillBadge}
+                    <div class="section-header state-header">
+                        <h3>${state}</h3>
                     </div>
                 `;
+                
+                const cities = stateGroups[state];
+                Object.keys(cities).sort().forEach(city => {
+                    const cafes = cities[city];
+                    const cityId = `city-${state}-${city}`.replace(/\s+/g, '-');
+                    
+                    html += `
+                        <div class="city-header collapsible" data-city-id="${cityId}">
+                            <h4>
+                                ${city}
+                                <span class="cafe-count">(${cafes.length})</span>
+                                <span class="expand-icon">▼</span>
+                            </h4>
+                        </div>
+                        <div class="city-cafes" id="${cityId}" style="display: none;">
+                    `;
+                    
+                    cafes.forEach(shop => {
+                        const actualIndex = coffeeShops.indexOf(shop);
+                        const linkUrl = shop.website;
+                        const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(shop.address)}`;
+                        const appleMapsUrl = `https://maps.apple.com/?daddr=${encodeURIComponent(shop.address)}`;
+                        
+                        const typeLink = linkUrl ? 
+                            `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer" class="shop-type">${shop.type}</a>` : 
+                            `<span class="shop-type no-link">${shop.type}</span>`;
+                        
+                        const instagramIcon = shop.instagram ? `
+                            <a href="https://instagram.com/${shop.instagram}" target="_blank" rel="noopener noreferrer" class="instagram-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                                </svg>
+                            </a>
+                        ` : '';
+                        
+                        const spillBadge = shop.isPartner ? 
+                            `<div class="spill-badge">
+                                <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                        <linearGradient id="spillGradient${actualIndex}" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" style="stop-color:#4A90E2;stop-opacity:1" />
+                                            <stop offset="50%" style="stop-color:#9B59B6;stop-opacity:1" />
+                                            <stop offset="100%" style="stop-color:#FF6B9D;stop-opacity:1" />
+                                        </linearGradient>
+                                    </defs>
+                                    <circle cx="12" cy="12" r="11" fill="url(#spillGradient${actualIndex})" stroke="#2C2C2C" stroke-width="1"/>
+                                    <text x="12" y="16" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">S</text>
+                                </svg>
+                            </div>` : '';
+                        
+                        html += `
+                            <div class="shop-card">
+                                <div class="shop-name">${shop.name}</div>
+                                <div class="shop-address">${shop.address}</div>
+                                <div class="shop-hours-placeholder" data-shop-index="${actualIndex}"></div>
+                                <div class="shop-meta">
+                                    ${typeLink}
+                                    ${instagramIcon}
+                                    <div class="directions-buttons">
+                                        <a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer" class="dir-btn">Google</a>
+                                        <a href="${appleMapsUrl}" target="_blank" rel="noopener noreferrer" class="dir-btn">Apple</a>
+                                    </div>
+                                </div>
+                                ${spillBadge}
+                            </div>
+                        `;
+                    });
+                    
+                    html += `</div>`; // Close city-cafes
+                });
             });
             
             listContent.innerHTML = html;
+            
+            // Add click handlers for collapsible city headers
+            setTimeout(() => {
+                document.querySelectorAll('.city-header.collapsible').forEach(header => {
+                    header.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const cityId = header.dataset.cityId;
+                        const cafesContainer = document.getElementById(cityId);
+                        const icon = header.querySelector('.expand-icon');
+                        
+                        if (cafesContainer.style.display === 'none') {
+                            cafesContainer.style.display = 'block';
+                            icon.textContent = '▲';
+                            header.classList.add('expanded');
+                        } else {
+                            cafesContainer.style.display = 'none';
+                            icon.textContent = '▼';
+                            header.classList.remove('expanded');
+                        }
+                    });
+                });
+                
+                // Populate hours
+                filteredShops.forEach((shop) => {
+                    const actualIndex = coffeeShops.indexOf(shop);
+                    const hoursPlaceholder = listContent.querySelector(`[data-shop-index="${actualIndex}"]`);
+                    if (hoursPlaceholder) {
+                        const hoursData = getHoursDisplay(shop);
+                        if (hoursData) {
+                            const statusClass = hoursData.isOpen ? 'open' : 'closed';
+                            hoursPlaceholder.innerHTML = `<div class="shop-hours ${statusClass}">${hoursData.text}</div>`;
+                        }
+                    }
+                });
+                
+                // Add link handlers
+                const listLinks = listContent.querySelectorAll('a');
+                listLinks.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (link.href) {
+                            e.preventDefault();
+                            window.open(link.href, '_blank', 'noopener,noreferrer');
+                        }
+                    });
+                });
+            }, 0);
             
             setTimeout(() => {
                 filteredShops.forEach((shop, index) => {
