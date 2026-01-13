@@ -1029,7 +1029,7 @@
             <div class="header-content">
                 <div class="logo">
                     <div class="logo-title">
-                        <h1>Spill Cafe Map</h1>
+                        <h1>Spill Coffee Map</h1>
                     </div>
                     <div class="logo-tagline">
                         <p class="typewriter">Get Independent Coffee Everywhere</p>
@@ -1167,6 +1167,8 @@
             return {
                 name: csvRow.name,
                 address: csvRow.address,
+                city: csvRow.city || '',
+                state: csvRow.state || '',
                 lat: parseFloat(csvRow.lat),
                 lng: parseFloat(csvRow.lng),
                 type: csvRow.type,
