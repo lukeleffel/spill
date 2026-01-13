@@ -6,7 +6,7 @@
     <link rel="manifest" href="manifest.json">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coffee Map - Independent Cafe Culture</title>
+    <title>Spill Coffee Map - Independent Cafe Culture</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -361,7 +361,8 @@
             background-clip: text;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
+            text-align: center;
         }
         
         .state-count {
@@ -407,7 +408,8 @@
             letter-spacing: 0.05em;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
+            text-align: center;
         }
         
         .expand-icon {
@@ -1131,7 +1133,7 @@
             <div class="header-content">
                 <div class="logo">
                     <div class="logo-title">
-                        <h1>Coffee Map</h1>
+                        <h1>Spill Coffee Map</h1>
                     </div>
                     <div class="logo-tagline">
                         <p class="typewriter">Get Independent Coffee Everywhere</p>
@@ -1668,10 +1670,7 @@
                 
                 html += `
                     <div class="state-header collapsible" data-state-id="${stateId}">
-                        <h3>
-                            ${fullStateName}
-                            <span class="expand-icon">►</span>
-                        </h3>
+                        <h3>${fullStateName}</h3>
                     </div>
                     <div class="state-cities" id="${stateId}" style="display: none;">
                 `;
@@ -1683,10 +1682,7 @@
                     
                     html += `
                         <div class="city-header collapsible" data-city-id="${cityId}" data-parent-state="${stateId}">
-                            <h4>
-                                ${city}
-                                <span class="expand-icon">►</span>
-                            </h4>
+                            <h4>${city}</h4>
                         </div>
                         <div class="city-cafes" id="${cityId}" style="display: none;">
                     `;
@@ -1758,7 +1754,6 @@
                         e.stopPropagation();
                         const stateId = header.dataset.stateId;
                         const stateContainer = document.getElementById(stateId);
-                        const icon = header.querySelector('.expand-icon');
                         
                         // Check if currently expanded
                         const isExpanded = stateContainer.style.display === 'block';
@@ -1767,9 +1762,6 @@
                         document.querySelectorAll('.state-cities').forEach(container => {
                             container.style.display = 'none';
                         });
-                        document.querySelectorAll('.state-header.collapsible .expand-icon').forEach(i => {
-                            i.textContent = '►';
-                        });
                         document.querySelectorAll('.state-header.collapsible').forEach(h => {
                             h.classList.remove('expanded');
                         });
@@ -1777,7 +1769,6 @@
                         // Toggle current state (if it was already open, keep it closed)
                         if (!isExpanded) {
                             stateContainer.style.display = 'block';
-                            icon.textContent = '▼';
                             header.classList.add('expanded');
                         }
                     });
@@ -1790,7 +1781,6 @@
                         const cityId = header.dataset.cityId;
                         const parentStateId = header.dataset.parentState;
                         const cafesContainer = document.getElementById(cityId);
-                        const icon = header.querySelector('.expand-icon');
                         
                         // Check if currently expanded
                         const isExpanded = cafesContainer.style.display === 'block';
@@ -1801,9 +1791,6 @@
                             parentState.querySelectorAll('.city-cafes').forEach(container => {
                                 container.style.display = 'none';
                             });
-                            parentState.querySelectorAll('.city-header.collapsible .expand-icon').forEach(i => {
-                                i.textContent = '►';
-                            });
                             parentState.querySelectorAll('.city-header.collapsible').forEach(h => {
                                 h.classList.remove('expanded');
                             });
@@ -1812,7 +1799,6 @@
                         // Toggle current city (if it was already open, keep it closed)
                         if (!isExpanded) {
                             cafesContainer.style.display = 'block';
-                            icon.textContent = '▼';
                             header.classList.add('expanded');
                         }
                     });
