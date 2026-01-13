@@ -319,6 +319,47 @@
             background: transparent;
         }
         
+        .section-header {
+            padding: 16px 24px;
+            border-bottom: 3px solid var(--dark);
+            position: sticky;
+            background: rgba(255, 248, 231, 0.98);
+            z-index: 5;
+            backdrop-filter: blur(10px);
+        }
+        
+        .state-header {
+            top: 0;
+            z-index: 6;
+        }
+        
+        .state-header h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: 0.08em;
+            margin: 0;
+            background: linear-gradient(135deg, var(--retro-blue), var(--retro-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .city-header {
+            top: 60px;
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 2px solid var(--retro-pink);
+        }
+        
+        .city-header h4 {
+            font-family: 'Lora', serif;
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0;
+            color: var(--dark);
+            letter-spacing: 0.02em;
+        }
+        
         .shop-card::before {
             content: '';
             position: absolute;
@@ -1511,13 +1552,54 @@
                 return true;
             });
             
+            // Sort by state, then city, then name
+            filteredShops.sort((a, b) => {
+                // First sort by state
+                if (a.state !== b.state) {
+                    return a.state.localeCompare(b.state);
+                }
+                // Then by city
+                if (a.city !== b.city) {
+                    return a.city.localeCompare(b.city);
+                }
+                // Then by name
+                return a.name.localeCompare(b.name);
+            });
+            
             if (filteredShops.length === 0) {
                 listContent.innerHTML = '<div class="loading-message">No cafes found matching your criteria.</div>';
                 return;
             }
             
-            listContent.innerHTML = filteredShops.map((shop, index) => {
+            // Build HTML with state/city grouping headers
+            let html = '';
+            let currentState = '';
+            let currentCity = '';
+            
+            filteredShops.forEach((shop, index) => {
                 const actualIndex = coffeeShops.indexOf(shop);
+                
+                // Add state header if state changes
+                if (shop.state !== currentState) {
+                    currentState = shop.state;
+                    currentCity = ''; // Reset city when state changes
+                    html += `
+                        <div class="section-header state-header">
+                            <h3>${shop.state || 'Unknown State'}</h3>
+                        </div>
+                    `;
+                }
+                
+                // Add city header if city changes
+                if (shop.city !== currentCity) {
+                    currentCity = shop.city;
+                    html += `
+                        <div class="section-header city-header">
+                            <h4>${shop.city || 'Unknown City'}</h4>
+                        </div>
+                    `;
+                }
+                
                 const linkUrl = shop.website;
                 const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(shop.address)}`;
                 const appleMapsUrl = `https://maps.apple.com/?daddr=${encodeURIComponent(shop.address)}`;
@@ -1549,7 +1631,7 @@
                         </svg>
                     </div>` : '';
                 
-                return `
+                html += `
                     <div class="shop-card">
                         <div class="shop-name">${shop.name}</div>
                         <div class="shop-address">${shop.address}</div>
@@ -1565,7 +1647,9 @@
                         ${spillBadge}
                     </div>
                 `;
-            }).join('');
+            });
+            
+            listContent.innerHTML = html;
             
             setTimeout(() => {
                 filteredShops.forEach((shop, index) => {
