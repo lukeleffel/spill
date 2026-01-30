@@ -565,7 +565,7 @@
             text-transform: uppercase;
             padding: 6px 12px;
             background: var(--dark);
-            color: var(--cream);
+            color: white;
             text-decoration: none;
             transition: all 0.2s ease;
         }
@@ -630,35 +630,32 @@
             width: 28px;
             height: 28px;
             background: transparent;
-            border: 1px solid var(--border);
+            border: none;
             cursor: pointer;
             transition: all 0.2s ease;
             padding: 0;
         }
         
         .star-btn:hover {
-            background: var(--accent-pink);
-            border-color: var(--accent-pink);
-        }
-        
-        .star-btn.starred {
-            background: var(--accent-pink);
-            border-color: var(--accent-pink);
+            transform: scale(1.1);
         }
         
         .star-btn svg {
-            width: 14px;
-            height: 14px;
+            width: 18px;
+            height: 18px;
             fill: none;
-            stroke: var(--dark);
+            stroke: var(--gray-light);
             stroke-width: 2;
             transition: all 0.2s ease;
         }
         
-        .star-btn:hover svg,
+        .star-btn:hover svg {
+            stroke: var(--accent-pink);
+        }
+        
         .star-btn.starred svg {
-            fill: white;
-            stroke: white;
+            fill: var(--accent-pink);
+            stroke: var(--accent-pink);
         }
         
         .starred-marker::before {
@@ -980,7 +977,7 @@
             text-transform: uppercase;
             padding: 4px 10px;
             background: var(--dark);
-            color: var(--cream);
+            color: white;
             text-decoration: none;
             transition: all 0.2s ease;
         }
@@ -1333,6 +1330,7 @@
                 return;
             }
 
+            // Request geolocation immediately
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     const lat = position.coords.latitude;
@@ -1341,7 +1339,16 @@
                     showUserLocation(lat, lng);
                     map.setView([lat, lng], 13);
                 },
-                () => map.setView([39.9833, -83.0167], 12)
+                (error) => {
+                    // If denied or error, fallback to Columbus
+                    console.log('Geolocation denied or unavailable, using default location');
+                    map.setView([39.9833, -83.0167], 12);
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
             );
         }
 
@@ -1632,9 +1639,20 @@
                 }
             });
             
-            // Zoom to fit all visible markers
+            // Zoom to fit all visible markers OR return to user location
             if (currentView === 'map') {
-                setTimeout(() => zoomToVisibleMarkers(), 100);
+                if (mode === 'all') {
+                    // Return to user location when showing all cafes
+                    if (userLocation) {
+                        map.setView([userLocation.lat, userLocation.lng], 13, { animate: true });
+                    } else {
+                        // If no user location, try to get it
+                        getUserLocation();
+                    }
+                } else {
+                    // For filtered views, zoom to show results
+                    setTimeout(() => zoomToVisibleMarkers(), 100);
+                }
             }
             
             if (currentView === 'list') renderListView();
