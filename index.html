@@ -732,6 +732,15 @@
             text-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
         
+        .saved-marker::after {
+            content: '🔖';
+            position: absolute;
+            top: -12px;
+            left: -6px;
+            font-size: 14px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        
         .spill-badge {
             position: absolute;
             top: 20px;
@@ -1409,6 +1418,21 @@
             document.querySelectorAll(`[data-save-shop="${shopName}"]`).forEach(btn => {
                 btn.classList.toggle('saved', isSaved(shopName));
             });
+            updateMarkerSaves(shopName);
+        }
+
+        function updateMarkerSaves(shopName) {
+            markers.forEach(({ shop, marker }) => {
+                if (shop.name === shopName) {
+                    const markerElement = marker.getElement();
+                    if (markerElement) {
+                        const markerDiv = markerElement.querySelector('.custom-marker');
+                        if (markerDiv) {
+                            markerDiv.classList.toggle('saved-marker', isSaved(shopName));
+                        }
+                    }
+                }
+            });
         }
 
         function createSaveButton(shopName) {
@@ -1554,6 +1578,7 @@
 
         function initializeMapPosition() {
             if (!navigator.geolocation) {
+                console.log('Geolocation not supported by browser');
                 map.setView([39.9833, -83.0167], 12);
                 return;
             }
@@ -1566,11 +1591,30 @@
                     userLocation = { lat, lng };
                     showUserLocation(lat, lng);
                     map.setView([lat, lng], 13);
+                    console.log('Location found:', lat, lng);
                 },
                 (error) => {
                     // If denied or error, fallback to Columbus
-                    console.log('Geolocation denied or unavailable, using default location');
+                    let errorMsg = 'Location unavailable';
+                    
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMsg = 'Location permission denied. Enable location in your browser settings to see nearby cafes.';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMsg = 'Location information unavailable.';
+                            break;
+                        case error.TIMEOUT:
+                            errorMsg = 'Location request timed out.';
+                            break;
+                    }
+                    
+                    console.log(errorMsg);
                     map.setView([39.9833, -83.0167], 12);
+                    
+                    // Show subtle notification (optional - only if you want to alert users)
+                    // Uncomment the line below if you want to show an alert
+                    // setTimeout(() => alert(errorMsg), 1000);
                 },
                 {
                     enableHighAccuracy: true,
@@ -1822,8 +1866,13 @@
                     const markerElement = marker.getElement();
                     if (markerElement) {
                         const markerDiv = markerElement.querySelector('.custom-marker');
-                        if (markerDiv && isStarred(shop.name)) {
-                            markerDiv.classList.add('starred-marker');
+                        if (markerDiv) {
+                            if (isStarred(shop.name)) {
+                                markerDiv.classList.add('starred-marker');
+                            }
+                            if (isSaved(shop.name)) {
+                                markerDiv.classList.add('saved-marker');
+                            }
                         }
                     }
                 });
