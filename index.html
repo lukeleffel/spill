@@ -1469,6 +1469,22 @@
         // =============================================================
         // FILTER FUNCTIONALITY
         // =============================================================
+        function zoomToVisibleMarkers() {
+            const visibleMarkers = markers.filter(({ marker }) => map.hasLayer(marker));
+            
+            if (visibleMarkers.length === 0) return;
+            
+            if (visibleMarkers.length === 1) {
+                const { shop } = visibleMarkers[0];
+                map.setView([shop.lat, shop.lng], 13, { animate: true });
+            } else {
+                const bounds = L.latLngBounds(
+                    visibleMarkers.map(({ shop }) => [shop.lat, shop.lng])
+                );
+                map.fitBounds(bounds, { padding: [50, 50], animate: true });
+            }
+        }
+
         function filterCafes(mode) {
             filterMode = mode;
             
@@ -1483,6 +1499,11 @@
                     marker.addTo(map);
                 }
             });
+            
+            // Zoom to fit all visible markers
+            if (currentView === 'map') {
+                setTimeout(() => zoomToVisibleMarkers(), 100);
+            }
             
             if (currentView === 'list') renderListView();
         }
@@ -1787,10 +1808,27 @@
                 markers.forEach(({ marker }) => marker.setOpacity(1));
                 return;
             }
+            
+            const matchingMarkers = [];
             markers.forEach(({ marker, shop }) => {
                 const searchText = `${shop.name} ${shop.address} ${shop.type}`.toLowerCase();
-                marker.setOpacity(searchText.includes(query) ? 1 : 0.2);
+                const matches = searchText.includes(query);
+                marker.setOpacity(matches ? 1 : 0.2);
+                if (matches) matchingMarkers.push({ marker, shop });
             });
+            
+            // Zoom to fit matching results
+            if (matchingMarkers.length > 0) {
+                if (matchingMarkers.length === 1) {
+                    const { shop } = matchingMarkers[0];
+                    map.setView([shop.lat, shop.lng], 13, { animate: true });
+                } else {
+                    const bounds = L.latLngBounds(
+                        matchingMarkers.map(({ shop }) => [shop.lat, shop.lng])
+                    );
+                    map.fitBounds(bounds, { padding: [50, 50], animate: true });
+                }
+            }
         });
 
         mapSearchInput.addEventListener('keypress', (e) => {
