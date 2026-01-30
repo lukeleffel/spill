@@ -572,6 +572,7 @@
         
         .shop-type:hover {
             background: var(--accent-blue);
+            color: var(--cream);
         }
         
         .shop-type.no-link:hover {
@@ -656,6 +657,41 @@
         .star-btn.starred svg {
             fill: var(--accent-pink);
             stroke: var(--accent-pink);
+        }
+        
+        .save-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 0;
+        }
+        
+        .save-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .save-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: var(--gray-light);
+            stroke-width: 2;
+            transition: all 0.2s ease;
+        }
+        
+        .save-btn:hover svg {
+            stroke: var(--accent-blue);
+        }
+        
+        .save-btn.saved svg {
+            fill: var(--accent-blue);
+            stroke: var(--accent-blue);
         }
         
         .starred-marker::before {
@@ -984,6 +1020,7 @@
         
         .popup-type:hover {
             background: var(--accent-blue);
+            color: var(--cream);
         }
         
         /* Custom Marker */
@@ -1136,9 +1173,17 @@
                     </div>
                 </div>
                 <div class="header-stats">
-                    <div class="stat-item" data-filter="starred">
+                    <div class="stat-item" data-filter="starred" title="Starred Cafes">
+                        <svg width="16" height="16" viewBox="0 0 24 24" style="margin-right: 6px;">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="var(--accent-pink)" stroke="var(--accent-pink)"/>
+                        </svg>
                         <span class="count" id="starredCount">0</span>
-                        <span class="label">Starred</span>
+                    </div>
+                    <div class="stat-item" data-filter="saved" title="Saved Cafes">
+                        <svg width="16" height="16" viewBox="0 0 24 24" style="margin-right: 6px;">
+                            <path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z" fill="var(--accent-blue)" stroke="var(--accent-blue)"/>
+                        </svg>
+                        <span class="count" id="savedCount">0</span>
                     </div>
                     <div class="stat-item" data-filter="partner">
                         <span class="count" id="networkCount">—</span>
@@ -1213,6 +1258,7 @@
         let userLocationMarker = null;
         let userLocation = null;
         let starredCafes = new Set();
+        let savedCafes = new Set();
 
         // =============================================================
         // STARRED CAFES FUNCTIONS
@@ -1275,6 +1321,56 @@
                             onclick="event.preventDefault(); event.stopPropagation(); toggleStar('${shopName.replace(/'/g, "\\'")}');">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                    </button>`;
+        }
+
+        // =============================================================
+        // SAVED CAFES FUNCTIONS
+        // =============================================================
+        function loadSavedCafes() {
+            const saved = localStorage.getItem('spillSavedCafes');
+            if (saved) {
+                savedCafes = new Set(JSON.parse(saved));
+            }
+            updateSavedCount();
+        }
+
+        function saveSavedCafes() {
+            localStorage.setItem('spillSavedCafes', JSON.stringify([...savedCafes]));
+            updateSavedCount();
+        }
+
+        function toggleSave(shopName) {
+            if (savedCafes.has(shopName)) {
+                savedCafes.delete(shopName);
+            } else {
+                savedCafes.add(shopName);
+            }
+            saveSavedCafes();
+            updateSaveButtons(shopName);
+        }
+
+        function isSaved(shopName) {
+            return savedCafes.has(shopName);
+        }
+
+        function updateSavedCount() {
+            document.getElementById('savedCount').textContent = savedCafes.size;
+        }
+
+        function updateSaveButtons(shopName) {
+            document.querySelectorAll(`[data-save-shop="${shopName}"]`).forEach(btn => {
+                btn.classList.toggle('saved', isSaved(shopName));
+            });
+        }
+
+        function createSaveButton(shopName) {
+            return `<button class="save-btn ${isSaved(shopName) ? 'saved' : ''}" 
+                            data-save-shop="${shopName}"
+                            onclick="event.preventDefault(); event.stopPropagation(); toggleSave('${shopName.replace(/'/g, "\\'")}');">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
                         </svg>
                     </button>`;
         }
@@ -1566,6 +1662,7 @@
                                 ${popupTypeLink}
                                 ${instagramIcon}
                                 ${createStarButton(shop.name)}
+                                ${createSaveButton(shop.name)}
                             </div>
                             <div class="directions-buttons">
                                 <a href="${googleMapsUrl}" target="_blank" class="dir-btn" rel="noopener noreferrer">Google</a>
@@ -1634,6 +1731,8 @@
                     shop.isPartner ? marker.addTo(map) : map.removeLayer(marker);
                 } else if (mode === 'starred') {
                     isStarred(shop.name) ? marker.addTo(map) : map.removeLayer(marker);
+                } else if (mode === 'saved') {
+                    isSaved(shop.name) ? marker.addTo(map) : map.removeLayer(marker);
                 } else {
                     marker.addTo(map);
                 }
@@ -1703,6 +1802,7 @@
             const filteredShops = coffeeShops.filter(shop => {
                 if (filterMode === 'partner' && !shop.isPartner) return false;
                 if (filterMode === 'starred' && !isStarred(shop.name)) return false;
+                if (filterMode === 'saved' && !isSaved(shop.name)) return false;
                 if (searchQuery) {
                     const searchText = `${shop.name} ${shop.address} ${shop.type}`.toLowerCase();
                     return searchText.includes(searchQuery.toLowerCase());
@@ -1788,6 +1888,7 @@
                                     ${typeLink}
                                     ${instagramIcon}
                                     ${createStarButton(shop.name)}
+                                    ${createSaveButton(shop.name)}
                                     <div class="directions-buttons">
                                         <a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer" class="dir-btn">Google</a>
                                         <a href="${appleMapsUrl}" target="_blank" rel="noopener noreferrer" class="dir-btn">Apple</a>
@@ -2006,6 +2107,7 @@
         // INITIALIZE
         // =============================================================
         loadStarredCafes();
+        loadSavedCafes();
         loadCafeData();
     </script>
     <script>
