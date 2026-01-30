@@ -722,6 +722,27 @@
             fill: var(--dark);
         }
         
+        .clear-list-btn {
+            font-family: 'Space Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 0.05em;
+            padding: 8px 16px;
+            background: transparent;
+            color: var(--gray);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin: 16px auto;
+            display: block;
+            text-transform: uppercase;
+        }
+        
+        .clear-list-btn:hover {
+            background: var(--dark);
+            color: var(--cream);
+            border-color: var(--dark);
+        }
+        
         .starred-marker::before {
             content: '★';
             position: absolute;
@@ -733,11 +754,13 @@
         }
         
         .saved-marker::after {
-            content: '🔖';
+            content: '▼';
             position: absolute;
-            top: -12px;
-            left: -6px;
-            font-size: 14px;
+            top: -16px;
+            left: -8px;
+            font-size: 12px;
+            color: #7BA3C9;
+            font-weight: bold;
             text-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
         
@@ -1446,6 +1469,53 @@
         }
 
         // =============================================================
+        // CLEAR LIST FUNCTIONS
+        // =============================================================
+        function clearStarredList() {
+            if (!confirm(`Clear all ${starredCafes.size} starred cafes?`)) return;
+            
+            starredCafes.clear();
+            saveStarredCafes();
+            
+            // Update all UI
+            document.querySelectorAll('.star-btn').forEach(btn => {
+                btn.classList.remove('starred');
+            });
+            document.querySelectorAll('.starred-marker').forEach(marker => {
+                marker.classList.remove('starred-marker');
+            });
+            
+            // Refresh views
+            if (currentView === 'list') {
+                renderListView();
+            } else {
+                filterCafes(filterMode);
+            }
+        }
+
+        function clearSavedList() {
+            if (!confirm(`Clear all ${savedCafes.size} saved cafes?`)) return;
+            
+            savedCafes.clear();
+            saveSavedCafes();
+            
+            // Update all UI
+            document.querySelectorAll('.save-btn').forEach(btn => {
+                btn.classList.remove('saved');
+            });
+            document.querySelectorAll('.saved-marker').forEach(marker => {
+                marker.classList.remove('saved-marker');
+            });
+            
+            // Refresh views
+            if (currentView === 'list') {
+                renderListView();
+            } else {
+                filterCafes(filterMode);
+            }
+        }
+
+        // =============================================================
         // SHARE LIST FUNCTIONALITY
         // =============================================================
         function shareList(listType) {
@@ -1997,8 +2067,16 @@
                 return a.name.localeCompare(b.name);
             });
             
+            // Clear button for starred/saved lists
+            let clearButtonHtml = '';
+            if (filterMode === 'starred' && starredCafes.size > 0) {
+                clearButtonHtml = `<button class="clear-list-btn" onclick="clearStarredList()">Clear All Starred (${starredCafes.size})</button>`;
+            } else if (filterMode === 'saved' && savedCafes.size > 0) {
+                clearButtonHtml = `<button class="clear-list-btn" onclick="clearSavedList()">Clear All Saved (${savedCafes.size})</button>`;
+            }
+            
             // Partner Cafes intro at top
-            let html = `
+            let html = clearButtonHtml + `
                 <div class="list-intro">
                     <h3>Partner Cafes</h3>
                     <p>Cafes with the <span class="partner-badge-inline"><svg width="16" height="16" viewBox="0 0 24 24"><defs><linearGradient id="gList" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#7BA3C9"/><stop offset="100%" style="stop-color:#C9A0DC"/></linearGradient></defs><circle cx="12" cy="12" r="11" fill="url(#gList)" stroke="#1A1A1A" stroke-width="1"/><text x="12" y="16" font-family="Arial" font-size="10" font-weight="bold" fill="white" text-anchor="middle">S</text></svg></span> badge are official Spill Coffee Map partners who have worked directly with us to share their story.</p>
