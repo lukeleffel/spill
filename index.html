@@ -1366,6 +1366,12 @@
             const shareBtn = document.getElementById('shareStarredBtn');
             if (shareBtn) {
                 shareBtn.style.display = starredCafes.size > 0 ? 'inline-flex' : 'none';
+                // Reattach event listener to ensure it works
+                shareBtn.onclick = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    shareList('starred');
+                };
             }
         }
 
@@ -1434,6 +1440,12 @@
             const shareBtn = document.getElementById('shareSavedBtn');
             if (shareBtn) {
                 shareBtn.style.display = savedCafes.size > 0 ? 'inline-flex' : 'none';
+                // Reattach event listener to ensure it works
+                shareBtn.onclick = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    shareList('saved');
+                };
             }
         }
 
@@ -2369,28 +2381,6 @@
         loadSavedCafes();
         loadSharedList();
         loadCafeData();
-        
-        // Add share button event listeners
-        document.addEventListener('DOMContentLoaded', () => {
-            const shareStarredBtn = document.getElementById('shareStarredBtn');
-            const shareSavedBtn = document.getElementById('shareSavedBtn');
-            
-            if (shareStarredBtn) {
-                shareStarredBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    shareList('starred');
-                });
-            }
-            
-            if (shareSavedBtn) {
-                shareSavedBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    shareList('saved');
-                });
-            }
-        });
     </script>
     <script>
         if ("serviceWorker" in navigator) {
