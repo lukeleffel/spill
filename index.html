@@ -623,6 +623,54 @@
             border-color: var(--dark);
         }
         
+        .star-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: transparent;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 0;
+        }
+        
+        .star-btn:hover {
+            background: var(--accent-pink);
+            border-color: var(--accent-pink);
+        }
+        
+        .star-btn.starred {
+            background: var(--accent-pink);
+            border-color: var(--accent-pink);
+        }
+        
+        .star-btn svg {
+            width: 14px;
+            height: 14px;
+            fill: none;
+            stroke: var(--dark);
+            stroke-width: 2;
+            transition: all 0.2s ease;
+        }
+        
+        .star-btn:hover svg,
+        .star-btn.starred svg {
+            fill: white;
+            stroke: white;
+        }
+        
+        .starred-marker::before {
+            content: '★';
+            position: absolute;
+            top: -12px;
+            right: -6px;
+            font-size: 16px;
+            color: var(--accent-pink);
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        
         .spill-badge {
             position: absolute;
             top: 20px;
@@ -1091,6 +1139,10 @@
                     </div>
                 </div>
                 <div class="header-stats">
+                    <div class="stat-item" data-filter="starred">
+                        <span class="count" id="starredCount">0</span>
+                        <span class="label">Starred</span>
+                    </div>
                     <div class="stat-item" data-filter="partner">
                         <span class="count" id="networkCount">—</span>
                         <span class="label">Partners</span>
@@ -1163,6 +1215,72 @@
         let map;
         let userLocationMarker = null;
         let userLocation = null;
+        let starredCafes = new Set();
+
+        // =============================================================
+        // STARRED CAFES FUNCTIONS
+        // =============================================================
+        function loadStarredCafes() {
+            const saved = localStorage.getItem('spillStarredCafes');
+            if (saved) {
+                starredCafes = new Set(JSON.parse(saved));
+            }
+            updateStarredCount();
+        }
+
+        function saveStarredCafes() {
+            localStorage.setItem('spillStarredCafes', JSON.stringify([...starredCafes]));
+            updateStarredCount();
+        }
+
+        function toggleStar(shopName) {
+            if (starredCafes.has(shopName)) {
+                starredCafes.delete(shopName);
+            } else {
+                starredCafes.add(shopName);
+            }
+            saveStarredCafes();
+            updateStarButtons(shopName);
+            updateMarkerStars(shopName);
+        }
+
+        function isStarred(shopName) {
+            return starredCafes.has(shopName);
+        }
+
+        function updateStarredCount() {
+            document.getElementById('starredCount').textContent = starredCafes.size;
+        }
+
+        function updateStarButtons(shopName) {
+            document.querySelectorAll(`[data-star-shop="${shopName}"]`).forEach(btn => {
+                btn.classList.toggle('starred', isStarred(shopName));
+            });
+        }
+
+        function updateMarkerStars(shopName) {
+            markers.forEach(({ shop, marker }) => {
+                if (shop.name === shopName) {
+                    const markerElement = marker.getElement();
+                    if (markerElement) {
+                        const markerDiv = markerElement.querySelector('.custom-marker');
+                        if (markerDiv) {
+                            markerDiv.classList.toggle('starred-marker', isStarred(shopName));
+                        }
+                    }
+                }
+            });
+        }
+
+        function createStarButton(shopName) {
+            return `<button class="star-btn ${isStarred(shopName) ? 'starred' : ''}" 
+                            data-star-shop="${shopName}"
+                            onclick="event.preventDefault(); event.stopPropagation(); toggleStar('${shopName.replace(/'/g, "\\'")}');">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                    </button>`;
+        }
 
         // =============================================================
         // GEOLOCATION FUNCTIONS
@@ -1440,6 +1558,7 @@
                             <div class="popup-meta">
                                 ${popupTypeLink}
                                 ${instagramIcon}
+                                ${createStarButton(shop.name)}
                             </div>
                             <div class="directions-buttons">
                                 <a href="${googleMapsUrl}" target="_blank" class="dir-btn" rel="noopener noreferrer">Google</a>
@@ -1460,6 +1579,17 @@
                             }
                         });
                     });
+                });
+                
+                // Add star indicator to marker if starred
+                marker.on('add', () => {
+                    const markerElement = marker.getElement();
+                    if (markerElement) {
+                        const markerDiv = markerElement.querySelector('.custom-marker');
+                        if (markerDiv && isStarred(shop.name)) {
+                            markerDiv.classList.add('starred-marker');
+                        }
+                    }
                 });
                 
                 markers.push({ marker, shop, index });
@@ -1495,6 +1625,8 @@
             markers.forEach(({ marker, shop }) => {
                 if (mode === 'partner') {
                     shop.isPartner ? marker.addTo(map) : map.removeLayer(marker);
+                } else if (mode === 'starred') {
+                    isStarred(shop.name) ? marker.addTo(map) : map.removeLayer(marker);
                 } else {
                     marker.addTo(map);
                 }
@@ -1552,6 +1684,7 @@
             
             const filteredShops = coffeeShops.filter(shop => {
                 if (filterMode === 'partner' && !shop.isPartner) return false;
+                if (filterMode === 'starred' && !isStarred(shop.name)) return false;
                 if (searchQuery) {
                     const searchText = `${shop.name} ${shop.address} ${shop.type}`.toLowerCase();
                     return searchText.includes(searchQuery.toLowerCase());
@@ -1636,6 +1769,7 @@
                                 <div class="shop-meta">
                                     ${typeLink}
                                     ${instagramIcon}
+                                    ${createStarButton(shop.name)}
                                     <div class="directions-buttons">
                                         <a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer" class="dir-btn">Google</a>
                                         <a href="${appleMapsUrl}" target="_blank" rel="noopener noreferrer" class="dir-btn">Apple</a>
@@ -1853,6 +1987,7 @@
         // =============================================================
         // INITIALIZE
         // =============================================================
+        loadStarredCafes();
         loadCafeData();
     </script>
     <script>
