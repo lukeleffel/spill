@@ -1101,8 +1101,8 @@
                     </div>
                 </div>
                 <div class="nav-toggle">
-                    <button class="nav-btn active" data-view="about">About</button>
-                    <button class="nav-btn" data-view="map">Map</button>
+                    <button class="nav-btn" data-view="about">About</button>
+                    <button class="nav-btn active" data-view="map">Map</button>
                     <button class="nav-btn" data-view="list">List</button>
                     <button class="nav-btn" data-view="news">News</button>
                 </div>
@@ -1110,7 +1110,7 @@
         </header>
         
         <div class="main-content">
-            <div id="map" class="hidden">
+            <div id="map">
                 <div class="map-search-container">
                     <div class="map-search-toggle" id="mapSearchToggle">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -1134,7 +1134,7 @@
                 <div id="listContent"></div>
             </div>
             
-            <div id="aboutView">
+            <div id="aboutView" class="hidden">
                 <div id="aboutContent"></div>
             </div>
             
@@ -1157,7 +1157,7 @@
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSmSV7NPuWEwAOauhSt_yhZ_xccnyX5Sux1Xighi_jwZhrSshxVq9shACmv0p8etUB6V9tQ_z4EKiMT/pub?output=csv'
         
         let coffeeShops = [];
-        let currentView = 'about';
+        let currentView = 'map';
         let filterMode = 'all';
         let markers = [];
         let map;
@@ -1566,7 +1566,19 @@
                 stateGroups[state][city].push(shop);
             });
             
-            const stateNames = { 'OH': 'Ohio', 'CA': 'California', 'NY': 'New York', 'TX': 'Texas', 'FL': 'Florida', 'IL': 'Illinois', 'MI': 'Michigan' };
+            const stateNames = {
+                'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas', 'CA': 'California',
+                'CO': 'Colorado', 'CT': 'Connecticut', 'DE': 'Delaware', 'FL': 'Florida', 'GA': 'Georgia',
+                'HI': 'Hawaii', 'ID': 'Idaho', 'IL': 'Illinois', 'IN': 'Indiana', 'IA': 'Iowa',
+                'KS': 'Kansas', 'KY': 'Kentucky', 'LA': 'Louisiana', 'ME': 'Maine', 'MD': 'Maryland',
+                'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota', 'MS': 'Mississippi', 'MO': 'Missouri',
+                'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada', 'NH': 'New Hampshire', 'NJ': 'New Jersey',
+                'NM': 'New Mexico', 'NY': 'New York', 'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio',
+                'OK': 'Oklahoma', 'OR': 'Oregon', 'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina',
+                'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont',
+                'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming',
+                'DC': 'District of Columbia'
+            };
             
             Object.keys(stateGroups).sort().forEach(state => {
                 const stateId = `state-${state}`;
@@ -1804,7 +1816,6 @@
         // INITIALIZE
         // =============================================================
         loadCafeData();
-        renderAboutView();
     </script>
     <script>
         if ("serviceWorker" in navigator) {
