@@ -1727,8 +1727,21 @@
         
         function showNewListInput() {
             const newListInput = document.getElementById('newListInput');
+            
+            // Auto-generate a unique list name
+            let listNumber = Object.keys(savedLists).length + 1;
+            let suggestedName = `My List ${listNumber}`;
+            
+            // Make sure it's unique
+            while (savedLists[suggestedName]) {
+                listNumber++;
+                suggestedName = `My List ${listNumber}`;
+            }
+            
+            newListInput.value = suggestedName;
             newListInput.classList.add('active');
             newListInput.focus();
+            newListInput.select(); // Select the text so user can easily replace it
         }
         
         function closeModal() {
@@ -1860,7 +1873,17 @@
         }
         
         function createNewEmptyList() {
-            const listName = prompt('Enter new list name:');
+            // Auto-generate a unique list name
+            let listNumber = Object.keys(savedLists).length + 1;
+            let suggestedName = `My List ${listNumber}`;
+            
+            // Make sure it's unique
+            while (savedLists[suggestedName]) {
+                listNumber++;
+                suggestedName = `My List ${listNumber}`;
+            }
+            
+            const listName = prompt('Enter new list name:', suggestedName);
             if (!listName || !listName.trim()) return;
             
             const trimmedName = listName.trim();
@@ -2300,7 +2323,12 @@
                                 <a href="${appleMapsUrl}" target="_blank" class="dir-btn" rel="noopener noreferrer">Apple</a>
                             </div>
                         </div>
-                    `, { closeButton: true, autoClose: true, closeOnClick: false });
+                    `, { 
+                        closeButton: true, 
+                        autoClose: false,  // Changed to false so clicking map doesn't close popup
+                        closeOnClick: false,
+                        autoPan: false  // Prevent map from panning when popup opens
+                    });
                 
                 marker.on('popupopen', () => {
                     const popup = marker.getPopup();
